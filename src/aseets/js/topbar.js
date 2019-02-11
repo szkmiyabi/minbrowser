@@ -4,6 +4,11 @@ let print_win;
 
 function navigateTo(url) {
     document.querySelector("webview").src = url;
+    //updateUrlText();
+}
+
+function updateUrlText() {
+    document.getElementById("urlText").value = document.querySelector("webview").src;
 }
 
 function getControlsHeight() {

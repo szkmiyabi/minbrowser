@@ -3,12 +3,16 @@ window.onresize = doLayout;
 onload = function() {
     var webview = document.querySelector("webview");
     doLayout();
-
     homeButton();
     printButton();
+    webview.addEventListener("dom-ready", updateUrlText);
 
     if(typeof(webview.setZoom) == "function" && typeof(webview.find) == "function") {}
 };
+
+function updateUrlText() {
+    document.getElementById("urlText").value = webview.src;
+}
 
 function doLayout() {
     var webview = document.querySelector("webview");

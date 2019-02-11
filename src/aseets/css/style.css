@@ -4,3 +4,7 @@ body {
     -webkit-user-select: none;
     -webkit-app-region: drag;
 }
+
+#urlText {
+    width: 560px;
+}
