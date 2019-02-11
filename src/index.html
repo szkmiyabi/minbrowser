@@ -1,5 +1,6 @@
-<html>
+<html lang="ja">
     <head>
+        <meta charset="utf-8">
         <link rel="stylesheet" href="aseets/css/style.css">
         <link rel="stylesheet" href="aseets/css/topbar.css">
         <script src="aseets/js/webview.js"></script>
@@ -8,9 +9,16 @@
     <body>
         <!-- Topbar -->
         <div id="controls">
+            <select id="urlCombo"></select>
             <input id="urlText" type="text">
             <button id="home" title="Go Home">Home</button>
             <button id="print_button">Print</button>
+            <button id="open">Open</button>
+            <button id="test">Test</button>
+            <button id="ungo">Ungo</button>
+            <button id="rego">Rego</button>
+            <button id="prev">Prev</button>
+            <button id="next">Next</button>
         </div>
         <!-- /Topbar -->
         <webview id="webview" autosize="on" src="https://www.google.co.jp" data-home="https://www.google.co.jp"></webview>

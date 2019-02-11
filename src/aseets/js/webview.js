@@ -1,18 +1,17 @@
 window.onresize = doLayout;
 
 onload = function() {
-    var webview = document.querySelector("webview");
     doLayout();
+    initWebview();
     homeButton();
     printButton();
-    webview.addEventListener("dom-ready", updateUrlText);
-
-    if(typeof(webview.setZoom) == "function" && typeof(webview.find) == "function") {}
+    openButton();
+    testButton();
+    nextButton();
+    prevButton();
+    ungoButton();
+    regoButton();
 };
-
-function updateUrlText() {
-    document.getElementById("urlText").value = webview.src;
-}
 
 function doLayout() {
     var webview = document.querySelector("webview");
