@@ -1,16 +1,14 @@
 window.onresize = doLayout;
 
-onload = function() {
+window.onload = function() {
     doLayout();
     initWebview();
-    homeButton();
-    printButton();
     openButton();
-    testButton();
     nextButton();
     prevButton();
     ungoButton();
     regoButton();
+    devToolButton();
 };
 
 function doLayout() {

@@ -1,13 +1,10 @@
 const { remote } = require("electron");
 const { BrowserWindow, dialog, shell } = remote;
-
 const fs = require("fs");
 const readline = require("readline");
 
-let print_win;
 let urlArr = [];
 let urlArrIdx = 0;
-let currentPath = "";
 
 function navigateTo(url) {
     document.querySelector("webview").src = url;
@@ -74,6 +71,13 @@ function event_igniter(obj) {
     obj.dispatchEvent(event);
 };
 
+function devToolButton() {
+    var webview = document.querySelector("webview");
+    document.querySelector("#devtool").onclick = function() {
+        webview.openDevTools();
+    };
+}
+
 function nextButton() {
     document.querySelector("#next").onclick = function() {
         var crIdx = urlArrIdx;
@@ -122,46 +126,10 @@ function regoButton() {
     });
 }
 
-function homeButton() {
-    document.querySelector("#home").onclick = function() {
-        var attribute = document.getElementById("webview");
-        var home = attribute.getAttribute("data-home");
-        navigateTo(home);
-    };
-}
-
-function printButton() {
-    document.getElementById("print_button").addEventListener("click", print);
-}
-
 function openButton() {
     document.getElementById("open").addEventListener("click", () => {
         openFile();
         createUrlCombo();
-    });
-}
-
-function testButton() {
-    document.getElementById("test").addEventListener("click", () => {
-        var str = "";
-        for(var i=0; i<urlArr.length; i++) {
-            var row = urlArr[i];
-            str += row[0] + "\r\n";
-            var elm = document.createElement("option");
-            elm.innerText = row[0];
-            document.querySelector("#urlCombo").appendChild(elm);
-
-        }
-        alert(str);
-    });
-}
-
-function print() {
-    var webview = document.querySelector("webview");
-    print_win = new BrowserWindow({"aut-hide-menu-bar": true});
-    print_win.loadURL(webview.src);
-    print_win.webContents.on("did-finish-load", function() {
-        print_win.webContents.print();
     });
 }
 
