@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron src",
+    "build-windows": "electron-packager src minbrowser --platform=win32 --arch=all --overwrite --electron-version=4.0.4 --icon=src/assets/icons/appicon.ico",
+    "build-macOS": ""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^4.0.4"
+    "electron": "^4.0.4",
+    "electron-packager": "^13.0.1"
   }
 }

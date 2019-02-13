@@ -22,3 +22,5 @@ $RECYCLE.BIN/
 # Operating System Files
 # =========================
 node_modules/
+minbrowser-win32-ia32/
+minbrowser-win32-x64/

@@ -9,6 +9,9 @@ window.onload = function() {
     ungoButton();
     regoButton();
     devToolButton();
+    fontLargeButton();
+    fontDefaultButton();
+    enterUrlText();
 };
 
 function doLayout() {

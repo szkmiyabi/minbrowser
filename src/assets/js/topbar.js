@@ -2,6 +2,7 @@ const { remote } = require("electron");
 const { BrowserWindow, dialog, shell } = remote;
 const fs = require("fs");
 const readline = require("readline");
+const proc = require("child_process");
 
 let urlArr = [];
 let urlArrIdx = 0;
@@ -31,6 +32,24 @@ function changeUrl() {
     document.querySelector("#urlText").value = newurl;
 }
 
+function enterUrlText() {
+    document.querySelector("#urlText").addEventListener("keypress", (event) => {
+        if(event.keyCode == 13) {
+            navigateTo(document.querySelector("#urlText").value);
+        }
+    });
+}
+
+function resetUrlCombo() {
+    if(document.querySelector("#urlCombo").getElementsByTagName("option").length > 0) {
+        var opts = document.querySelector("#urlCombo").getElementsByTagName("option");
+        for(var i=0; i<opts.length; i++) {
+            var opt = opts.item(i);
+            document.querySelector("#urlCombo").removeChild(opt);
+        }
+    }
+}
+
 function createUrlCombo() {
     for(var i=0; i<urlArr.length; i++) {
         var row = urlArr[i];
@@ -45,6 +64,12 @@ function createUrlCombo() {
     document.querySelector("#urlCombo").onchange = function() {
         changeUrl();
     };
+}
+
+function resetUrlCombo() {
+    urlArr = [];
+    urlArrIdx = 0;
+    
 }
 
 function getControlsHeight() {
@@ -70,6 +95,20 @@ function event_igniter(obj) {
     event.initEvent("change", true, false);
     obj.dispatchEvent(event);
 };
+
+function fontLargeButton() {
+    var webview = document.querySelector("webview");
+    document.querySelector("#f-large").onclick = function() {
+        webview.setZoomFactor(2.0);
+    };
+}
+
+function fontDefaultButton() {
+    var webview = document.querySelector("webview");
+    document.querySelector("#f-default").onclick = function() {
+        webview.setZoomFactor(1.0);
+    };
+}
 
 function devToolButton() {
     var webview = document.querySelector("webview");
@@ -129,6 +168,7 @@ function regoButton() {
 function openButton() {
     document.getElementById("open").addEventListener("click", () => {
         openFile();
+        resetUrlCombo();
         createUrlCombo();
     });
 }

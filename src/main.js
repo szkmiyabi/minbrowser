@@ -97,8 +97,8 @@ function createWindow() {
     */
    mainWindow = new BrowserWindow({ width: 1024, height: 768});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
-   const menu = Menu.buildFromTemplate(template);
-   Menu.setApplicationMenu(menu);
+   //const menu = Menu.buildFromTemplate(template);
+   Menu.setApplicationMenu(null);
 }
 
 app.on("ready", createWindow);
