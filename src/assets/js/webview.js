@@ -2,6 +2,7 @@ window.onresize = doLayout;
 
 window.onload = function() {
     doLayout();
+    webviewNewWindowInit();
     initWebview();
     openButton();
     nextButton();
@@ -12,6 +13,7 @@ window.onload = function() {
     fontLargeButton();
     fontDefaultButton();
     enterUrlText();
+    w3cButton();
 };
 
 function doLayout() {

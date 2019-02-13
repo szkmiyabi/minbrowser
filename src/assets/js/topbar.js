@@ -7,6 +7,19 @@ const proc = require("child_process");
 let urlArr = [];
 let urlArrIdx = 0;
 
+const w3c_urlbase = "https://validator.w3.org/check?ss=1&group=1&verbose=1&uri=";
+
+function webviewNewWindowInit() {
+    var webview  = document.querySelector("webview");
+    webview.addEventListener("new-window", (e) => {
+        const protocol = require("url").parse(e.url).protocol;
+        if(protocol === "http:" || protocol === "https:") {
+            let win = new BrowserWindow({width: 1024, height: 768});
+            win.loadURL(e.url);
+        }
+    });
+}
+
 function navigateTo(url) {
     document.querySelector("webview").src = url;
 }
@@ -190,6 +203,14 @@ function openFile() {
             }
         }
     );
+}
+
+function w3cButton() {
+    document.querySelector("#w3c").onclick = function() {
+        var crurl = document.querySelector("#urlText").value;
+        let win = new BrowserWindow({width: 1024, height: 768});
+        win.loadURL(w3c_urlbase + crurl);
+    };
 }
 
 function createUrlDatas(path) {
