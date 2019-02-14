@@ -2,7 +2,6 @@ const { remote } = require("electron");
 const { BrowserWindow, dialog, shell } = remote;
 const fs = require("fs");
 const readline = require("readline");
-const proc = require("child_process");
 
 let urlArr = [];
 let urlArrIdx = 0;
@@ -82,7 +81,6 @@ function createUrlCombo() {
 function resetUrlCombo() {
     urlArr = [];
     urlArrIdx = 0;
-    
 }
 
 function getControlsHeight() {
@@ -95,7 +93,7 @@ function getControlsHeight() {
 }
 
 function initWebview() {
-    var webview = document.querySelector("webview");
+    var webview = document.querySelector("#webview");
     webview.addEventListener("dom-ready", updateUrlText);
 }
 
@@ -207,9 +205,11 @@ function openFile() {
 
 function w3cButton() {
     document.querySelector("#w3c").onclick = function() {
-        var crurl = document.querySelector("#urlText").value;
-        let win = new BrowserWindow({width: 1024, height: 768});
-        win.loadURL(w3c_urlbase + crurl);
+        let crurl = document.querySelector("#urlText").value;
+
+        require("electron").ipcRenderer.send("w3cButton-click", {
+            win: "w3cWin", winurl: w3c_urlbase + crurl
+        });
     };
 }
 

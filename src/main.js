@@ -1,8 +1,8 @@
 const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-var path = require("path");
-var fs = require("fs");
+let path = require("path");
+let fs = require("fs");
 
 const { Menu } = require("electron");
 const template = [
@@ -97,11 +97,53 @@ function createWindow() {
     */
    mainWindow = new BrowserWindow({ width: 1024, height: 768});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
+   //mainWindow.toggleDevTools();
    //const menu = Menu.buildFromTemplate(template);
    Menu.setApplicationMenu(null);
 }
 
-app.on("ready", createWindow);
+app.on("ready", () => {
+    createWindow();
+    const {ipcMain} = require("electron");
+    ipcMain.on('w3cButton-click', (event, arg) => {
+        let w3cWindow = new BrowserWindow({width: 1024, height: 768});
+        w3cWindow.loadURL(arg.winurl);
+        //w3cWindow.webContents.toggleDevTools();
+        w3cWindow.webContents.on("did-finish-load", () => {
+            w3cWindow.webContents.executeJavaScript(`
+                var rep_wrapper = document.getElementById("results");
+                var str = "";
+                var errcnt = 0;
+                var linept = new RegExp(/(From line )([0-9]+?)(,)/);
+                var inwrap = rep_wrapper.getElementsByTagName("ol")[0];
+                var rows = inwrap.getElementsByTagName("li");
+                for(var i=0; i<rows.length; i++) {
+                    var row = rows.item(i);
+                    var atr = row.getAttribute("class");
+                    if(atr === "error") {
+                        errcnt++;
+                        var emsg = row.getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerText;
+                        var eline = row.getElementsByClassName("location")[0].getElementsByTagName("a")[0].innerText;
+                        var elinestr = "";
+                        if(linept.test(eline)) {
+                            elinestr = eline.match(linept)[2];
+                        }
+                        elinestr += "行目";
+                        var esrc = row.getElementsByClassName("extract")[0].getElementsByTagName("code")[0].innerText;
+                        str += elinestr + "<my:br>" + emsg + "<my:br><my:br>" + esrc + "<my:br><my:br><my:br>";
+                    }
+                }
+                var send_datas = JSON.parse(JSON.stringify({ reptext: str }));
+                require("electron").ipcRenderer.send("reply", send_datas);
+            `);
+        });
+    });
+    ipcMain.on("reply", (event, arg) => {
+        let argval = arg.reptext;
+        argval = argval.replace(/<my:br>/g, "\r\n");
+        require("electron").clipboard.writeText(argval);
+    });
+});
 app.on("window-all-closed", () => {
     /*
     var data = {
