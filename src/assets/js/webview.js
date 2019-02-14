@@ -14,6 +14,7 @@ window.onload = function() {
     fontDefaultButton();
     enterUrlText();
     w3cButton();
+    cssCutButton();
 };
 
 function doLayout() {

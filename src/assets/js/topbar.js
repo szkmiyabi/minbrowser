@@ -214,6 +214,15 @@ function w3cButton() {
     };
 }
 
+function cssCutButton() {
+    document.querySelector("#csscut").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("ccButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
 function createUrlDatas(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});

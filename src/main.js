@@ -4,6 +4,8 @@ const BrowserWindow = electron.BrowserWindow;
 let path = require("path");
 let fs = require("fs");
 
+const presvUtil = require(__dirname + "/assets/js/presvUtil");
+
 const { Menu } = require("electron");
 const template = [
     {
@@ -110,62 +112,23 @@ app.on("ready", () => {
         w3cWindow.loadURL(arg.winurl);
         //w3cWindow.webContents.toggleDevTools();
         w3cWindow.webContents.on("did-finish-load", () => {
-            w3cWindow.webContents.executeJavaScript(`
-                var str = "";
-                var crurl = location.href;
-                if(crurl.indexOf(".org/nu/") > 0) {
-                    var rep_wrapper = document.getElementById("results");
-                    var errcnt = 0;
-                    var linept = new RegExp(/(From|At)( line )([0-9]+?)(,)/);
-                    var inwrap = rep_wrapper.getElementsByTagName("ol")[0];
-                    var rows = inwrap.getElementsByTagName("li");
-                    for(var i=0; i<rows.length; i++) {
-                        var row = rows.item(i);
-                        var atr = row.getAttribute("class");
-                        if(atr === "error") {
-                            errcnt++;
-                            var emsg = row.getElementsByTagName("p")[0].getElementsByTagName("span")[0].innerText;
-                            var eline = row.getElementsByClassName("location")[0].getElementsByTagName("a")[0].innerText;
-                            var elinestr = "";
-                            if(linept.test(eline)) {
-                                elinestr = eline.match(linept)[3];
-                            }
-                            elinestr += "行目";
-                            var esrc = row.getElementsByClassName("extract")[0].getElementsByTagName("code")[0].innerText;
-                            str += elinestr + "<my:br>" + emsg + "<my:br><my:br>" + esrc + "<my:br><my:br><my:br>";
-                        }
-                    }
-                } else {
-                    var rep_wrapper = document.getElementById("error_loop");
-                    var errcnt = 0;
-                    var linept = new RegExp(/(Line )([0-9]+?)(,)/);
-                    var rows = rep_wrapper.getElementsByTagName("li");
-                    for(var i=0; i<rows.length; i++) {
-                        var row = rows.item(i);
-                        var atr = row.getAttribute("class");
-                        if(atr === "msg_err") {
-                            errcnt++;
-                            var eline = row.getElementsByTagName("em")[0].innerText;
-                            var elinestr = "";
-                            if(linept.test(eline)) {
-                                elinestr = eline.match(linept)[2];
-                            }
-                            elinestr += "行目";
-                            var emsg = row.getElementsByClassName("msg")[0].innerText;
-                            var esrc = row.getElementsByTagName("pre")[0].getElementsByTagName("code")[0].innerText;
-                            str += elinestr + "<my:br>" + emsg + "<my:br><my:br>" + esrc + "<my:br><my:br><my:br>";
-                        }
-                    }
-                }
-                var send_datas = JSON.parse(JSON.stringify({ reptext: str }));
-                require("electron").ipcRenderer.send("reply", send_datas);
-            `);
+            w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
         });
     });
     ipcMain.on("reply", (event, arg) => {
         let argval = arg.reptext;
         argval = argval.replace(/<my:br>/g, "\r\n");
         require("electron").clipboard.writeText(argval);
+    });
+    ipcMain.on("ccButton-click", (event, arg) => {
+        let ccWindow = new BrowserWindow({width: 1024, height: 768});
+        ccWindow.loadURL(arg.winurl);
+        ccWindow.webContents.on("did-finish-load", () => {
+            ccWindow.webContents.executeJavaScript(presvUtil.css_cut());
+        });
+    });
+    ipcMain.on("cc-reply", (event, arg) => {
+        console.log("complete");
     });
 });
 app.on("window-all-closed", () => {
