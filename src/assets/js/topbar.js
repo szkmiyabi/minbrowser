@@ -7,6 +7,7 @@ let urlArr = [];
 let urlArrIdx = 0;
 
 //const w3c_urlbase = "https://validator.w3.org/check?ss=1&group=1&verbose=1&uri=";
+const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
 
 function webviewNewWindowInit() {
     var webview  = document.querySelector("webview");
