@@ -15,6 +15,7 @@ window.onload = function() {
     enterUrlText();
     w3cButton();
     cssCutButton();
+    altCheckButton();
 };
 
 function doLayout() {

@@ -6,6 +6,7 @@ const { Menu } = require("electron");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
+let presvWindow = null;
 
 const template = [
     {
@@ -47,7 +48,7 @@ const template = [
 
 function createWindow() {
 
-   mainWindow = new BrowserWindow({ width: 1024, height: 768});
+   mainWindow = new BrowserWindow({ width: 1200, height: 768});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
    //mainWindow.toggleDevTools();
    //const menu = Menu.buildFromTemplate(template);
@@ -59,6 +60,7 @@ app.on("ready", () => {
     const {ipcMain} = require("electron");
     ipcMain.on('w3cButton-click', (event, arg) => {
         let w3cWindow = new BrowserWindow({width: 1024, height: 768});
+        w3cWindow.on("closed", () => { w3cWindow = null });
         w3cWindow.loadURL(arg.winurl);
         //w3cWindow.webContents.toggleDevTools();
         w3cWindow.webContents.on("did-finish-load", () => {
@@ -71,13 +73,35 @@ app.on("ready", () => {
         require("electron").clipboard.writeText(argval);
     });
     ipcMain.on("ccButton-click", (event, arg) => {
-        let ccWindow = new BrowserWindow({width: 1024, height: 768});
-        ccWindow.loadURL(arg.winurl);
-        ccWindow.webContents.on("did-finish-load", () => {
-            ccWindow.webContents.executeJavaScript(presvUtil.css_cut());
-        });
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow.on("closed", () => { presvWindow = null });
+            presvWindow.loadURL(arg.winurl);
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
+            });
+        } else {
+            presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
+        }
     });
     ipcMain.on("cc-reply", (event, arg) => {
+        console.log("complete");
+    });
+    ipcMain.on("altButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow.on("closed", () => { presvWindow = null });
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
+            });
+        } else {
+            presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
+        }
+
+    });
+    ipcMain.on("alt-reply", (event, arg) => {
         console.log("complete");
     });
 });

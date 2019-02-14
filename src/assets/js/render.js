@@ -207,7 +207,6 @@ function openFile() {
 function w3cButton() {
     document.querySelector("#w3c").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
-
         require("electron").ipcRenderer.send("w3cButton-click", {
             win: "w3cWin", winurl: w3c_urlbase + crurl
         });
@@ -218,6 +217,15 @@ function cssCutButton() {
     document.querySelector("#csscut").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
         require("electron").ipcRenderer.send("ccButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
+function altCheckButton() {
+    document.querySelector("#altcheck").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("altButton-click", {
             winurl: crurl
         });
     };
