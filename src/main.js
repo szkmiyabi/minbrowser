@@ -48,7 +48,7 @@ const template = [
 
 function createWindow() {
 
-   mainWindow = new BrowserWindow({ width: 1200, height: 768});
+   mainWindow = new BrowserWindow({ width: 1140, height: 740});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
    //mainWindow.toggleDevTools();
    //const menu = Menu.buildFromTemplate(template);

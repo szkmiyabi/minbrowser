@@ -6,7 +6,7 @@ body {
 }
 
 #urlText {
-    width: 560px;
+    width: 475px;
 }
 
 .tooltip {
@@ -19,9 +19,9 @@ body {
     background: #000;
     color: #fff;
     border-radius: 5px;
-    width: 10em;
+    width: 6em;
     top: 30px;
-    left: 0;
+    left: -30px;
     visibility: hidden;
 }
 .tooltip:hover span {
