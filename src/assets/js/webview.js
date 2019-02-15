@@ -5,6 +5,7 @@ window.onload = function() {
     webviewNewWindowInit();
     initWebview();
     openButton();
+    homeButton();
     nextButton();
     prevButton();
     ungoButton();
@@ -17,6 +18,7 @@ window.onload = function() {
     cssCutButton();
     altCheckButton();
     targetCheckButton();
+    structCheckButton();
 };
 
 function doLayout() {

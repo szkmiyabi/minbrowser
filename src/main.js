@@ -114,6 +114,20 @@ app.on("ready", () => {
         }
     });
     ipcMain.on("target-reply", (event, arg) => {});
+    ipcMain.on("structButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+            });
+        } else {
+            presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+        }
+    });
+    ipcMain.on("struct-reply", (event, arg) => {});
 });
 app.on("window-all-closed", () => {
    if(process.platform !== "darwin") {

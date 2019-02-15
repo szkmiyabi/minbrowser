@@ -230,4 +230,158 @@ module.exports = class presvUtil {
         `;
     }
 
+    static semantic_check(operation) {
+        return `
+            function tag_paragraph() {
+                var ps = document.getElementsByTagName("p");
+                for(var i=0; i<ps.length; i++) {
+                    var p = ps.item(i);
+                    p.setAttribute("style", "border:1px solid red; position: relative;");
+                    add_label(p, i, "afterbegin", "#B94A48");
+                }
+            }
+            function tag_heading() {
+                var tags = ["h1", "h2", "h3", "h4", "h5", "h6"];
+                var idx = tags.length;
+                var in_funcs = new Array();
+                for(var i=0; i<idx; i++) {
+                    var val = tags[i];
+                    in_funcs.push(make_funcs(val));
+                }
+                function make_funcs(tag) {
+                    return function() {
+                        var ts = document.getElementsByTagName(tag);
+                        for(var i=0; i<ts.length; i++) {
+                            var t = ts.item(i);
+                            t.setAttribute("style", "border:1px solid red; position: relative;");
+                            add_label(t, i, "afterbegin", "#B94A48");
+                        }
+                    }
+                }
+                for(var i=0; i<idx; i++) {
+                    in_funcs[i]();
+                }
+            }
+            function tag_br() {
+                var brs = document.getElementsByTagName("br");
+                for(var i=0; i<brs.length; i++) {
+                    var br = brs.item(i);
+                    var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
+                    var span = '<span id="bkm-br-span-"' + i + '" style="' + css_txt + 'background:#888888;">&lt;br&gt;</span>';
+                    br.insertAdjacentHTML("beforebegin", span);
+                }
+            }
+            function tag_semantic() {
+                var tags = ["strong", "em", "address", "nav", "section"];
+                var idx = tags.length;
+                var in_funcs = new Array();
+                for(var i=0; i<idx; i++) {
+                    var val = tags[i];
+                    in_funcs.push(make_funcs(val));
+                }
+                function make_funcs(tag) {
+                    return function() {
+                        var ts = document.getElementsByTagName(tag);
+                        for(var i=0; i<ts.length; i++) {
+                            var t = ts.item(i);
+                            t.setAttribute("style", "border:1px solid red; position: relative;");
+                            add_label(t, i, "afterbegin", "#888888");
+                        }
+                    }
+                }
+                for(var i=0; i<idx; i++) {
+                    in_funcs[i]();
+                }
+            }
+            function tag_list() {
+                var tags = ["ul", "ol", "dl", "dt", "dd"];
+                var idx = tags.length;
+                var in_funcs = new Array();
+                for(var i=0; i<idx; i++) {
+                    var val = tags[i];
+                    in_funcs.push(make_funcs(val));
+                }
+                function make_funcs(tag) {
+                    return function() {
+                        var ts = document.getElementsByTagName(tag);
+                        for(var i=0; i<ts.length; i++) {
+                            var t = ts.item(i);
+                            t.setAttribute("style", "border:1px solid red; position: relative;");
+                            add_label(t, i, "afterbegin", "#468847");
+                        }
+                    }
+                }
+                for(var i=0; i<idx; i++) {
+                    in_funcs[i]();
+                }
+            }
+            function tag_table() {
+                var in_funcs = [
+                    function() {
+                        var tbls = document.getElementsByTagName("table");
+                        for(var i=0; i<tbls.length; i++) {
+                            var tbl = tbls.item(i);
+                            tbl.setAttribute("style", "border:2px solid red!important; position: relative;");
+                            add_label(tbl, i, "beforebegin", "#800000");
+                        }
+                        for(var i=0; i<tbls.length; i++) {
+                            var tbl = tbls.item(i);
+                            var smry = tbl.getAttribute("summary");
+                            var span = document.getElementById("bkm-table-span-" + i);
+                            var now_label_text = span.innerHTML;
+                            var new_label_text = (smry === null) ? now_label_text : now_label_text + ", summary:" + smry;
+                            span.innerHTML = new_label_text;
+                        }
+                    },
+                    function() {
+                        var cps = document.getElementsByTagName("caption");
+                        for(var i=0; i<cps.length; i++) {
+                            var cp = cps.item(i);
+                            cp.setAttribute("style", "border:1px solid red!important; position: relative;");
+                            add_label(cp, i, "afterbegin", "#800000");
+                        }
+                    },
+                    function() {
+                        var ths = document.getElementsByTagName("th");
+                        for(var i=0; i<ths.length; i++) {
+                            var th = ths.item(i);
+                            th.setAttribute("style", "border:2px solid red!important; position: relative;");
+                            add_label(th, i, "afterbegin", "#800000");
+                        }
+                        for(var i=0; i<ths.length; i++) {
+                            var th = ths.item(i);
+                            var scope = th.getAttribute("scope");
+                            var span = document.getElementById("bkm-th-span-" + i);
+                            var now_label_text = span.innerHTML;
+                            var new_label_text = (scope===null) ? now_label_text : now_label_text + ", scope:" + scope;
+                            span.innerHTML = new_label_text;
+                        }
+                    }
+                ];
+                for(var i=0; i<in_funcs.length; i++) {
+                    in_funcs[i]();
+                }
+            }
+            function add_label(obj, cnt, pos, colorcode) {
+                var tag_name = obj.tagName;
+                    tag_name = tag_name.toLowerCase();
+                var span_id = "bkm-" + tag_name + "-span-" + cnt;
+                var css_txt = "color:#fff;font-size:90%!important;font-weight:normal!important;padding:1px;border-radius:3px;";
+                css_txt += 'background:' + colorcode + ';';
+                var html_str = '&lt;' + tag_name + '&gt;';
+                var span = '<span id="' + span_id + '" style="' + css_txt + '">' + html_str + '</span>';
+                obj.insertAdjacentHTML(pos, span);
+            }
+            tag_paragraph();
+            tag_heading();
+            tag_br();
+            tag_semantic();
+            tag_list();
+            tag_table();
+            require("electron").ipcRenderer.send("struct-reply", 
+                JSON.parse(JSON.stringify({status:"ok"}))
+            );
+        `;
+    }
+
 }

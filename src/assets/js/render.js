@@ -5,6 +5,7 @@ const readline = require("readline");
 
 let urlArr = [];
 let urlArrIdx = 0;
+let homeUrl = "https://www.google.co.jp";
 
 //const w3c_urlbase = "https://validator.w3.org/check?ss=1&group=1&verbose=1&uri=";
 const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
@@ -177,6 +178,13 @@ function regoButton() {
     });
 }
 
+function homeButton() {
+    document.querySelector("#home").onclick = function() {
+        navigateTo(homeUrl);
+        document.querySelector("#urlText").value = homeUrl;
+    };
+}
+
 function openButton() {
     document.getElementById("open").addEventListener("click", () => {
         openFile();
@@ -235,6 +243,15 @@ function targetCheckButton() {
     document.querySelector("#targetcheck").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
         require("electron").ipcRenderer.send("targetButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
+function structCheckButton() {
+    document.querySelector("#structcheck").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("structButton-click", {
             winurl: crurl
         });
     };
