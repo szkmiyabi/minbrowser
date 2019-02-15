@@ -199,7 +199,6 @@ module.exports = class presvUtil {
     static target_attr() {
         return `
             var ats = document.getElementsByTagName("a");
-            var i = 0;
             for(var i=0; i<ats.length; i++) {
                 var atag = ats.item(i);
                 var ataghtml = atag.outerHTML;
@@ -211,7 +210,6 @@ module.exports = class presvUtil {
                     var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;";
                     var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
                     atag.insertAdjacentHTML("beforebegin", span);
-                    i++;
                 }
             }
             function _target_attr_check(str) {
