@@ -84,9 +84,7 @@ app.on("ready", () => {
             presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
         }
     });
-    ipcMain.on("cc-reply", (event, arg) => {
-        console.log("complete");
-    });
+    ipcMain.on("cc-reply", (event, arg) => {});
     ipcMain.on("altButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768});
@@ -101,9 +99,21 @@ app.on("ready", () => {
         }
 
     });
-    ipcMain.on("alt-reply", (event, arg) => {
-        console.log("complete");
+    ipcMain.on("alt-reply", (event, arg) => {});
+    ipcMain.on("targetButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
+            });
+        } else {
+            presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
+        }
     });
+    ipcMain.on("target-reply", (event, arg) => {});
 });
 app.on("window-all-closed", () => {
    if(process.platform !== "darwin") {

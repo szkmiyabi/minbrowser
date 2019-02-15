@@ -12,17 +12,18 @@
         <div id="controls">
             <select id="urlCombo"></select>
             <input id="urlText" type="text">
-            <button id="open"><i class="fas fa-folder-open fa-lg"></i></button>
+            <button id="open" class="tooltip" data-tooltip="URL一覧ファイルを指定します"><i class="fas fa-folder-open fa-lg"></i></button>
             <button id="ungo"><i class="far fa-arrow-alt-circle-left fa-lg"></i></button>
             <button id="rego"><i class="far fa-arrow-alt-circle-right fa-lg"></i></button>
-            <button id="prev"><i class="fas fa-arrow-alt-circle-left fa-lg"></i></button>
-            <button id="next"><i class="fas fa-arrow-alt-circle-right fa-lg"></i></button>
-            <button id="f-large"><i class="fas fa-plus-circle fa-lg"></i></button>
-            <button id="f-default"><i class="fas fa-minus-circle fa-lg"></i></button>
-            <button id="devtool"><i class="fas fa-cog fa-lg"></i></button>
-            <button id="w3c"><i class="fas fa-bug fa-lg"></i></button>
-            <button id="csscut"><i class="fas fa-closed-captioning fa-lg"></i></button>
-            <button id="altcheck"><i class="fas fa-eye fa-lg"></i></button>
+            <button id="prev" class="tooltip" data-tooltip="前番号ページへ"><i class="fas fa-arrow-alt-circle-left fa-lg"></i></button>
+            <button id="next" class="tooltip" data-tooltip="次番号ページへ"><i class="fas fa-arrow-alt-circle-right fa-lg"></i></button>
+            <button id="f-large" class="tooltip" data-tooltip="ズーム200%にする"><i class="fas fa-plus-circle fa-lg"></i></button>
+            <button id="f-default" class="tooltip" data-tooltip="ズーム100%に戻す"><i class="fas fa-minus-circle fa-lg"></i></button>
+            <button id="devtool" class="tooltip" data-tooltip="DevToolを起動します"><i class="fas fa-cog fa-lg"></i></button>
+            <button id="w3c" class="tooltip" data-tooltip="HTMLバリデートを実行します"><i class="fas fa-bug fa-lg"></i></button>
+            <button id="csscut" class="tooltip" data-tooltip="CSSカットを実行します"><i class="fas fa-closed-captioning fa-lg"></i></button>
+            <button id="altcheck" class="tooltip" data-tooltip="alt属性のチェックをします"><i class="fas fa-eye fa-lg"></i></button>
+            <button id="targetcheck" class="tooltip" data-tooltip="target属性のチェックをします"><i class="fas fa-share-square fa-lg"></i></button>
         </div>
         <!-- /Topbar -->
         <webview id="webview" allowpopups="true" autosize="on" src="https://www.google.co.jp"></webview>

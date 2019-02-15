@@ -231,6 +231,15 @@ function altCheckButton() {
     };
 }
 
+function targetCheckButton() {
+    document.querySelector("#targetcheck").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("targetButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
 function createUrlDatas(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});

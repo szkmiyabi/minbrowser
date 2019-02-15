@@ -2,11 +2,48 @@ module.exports = class presvUtil {
 
     static css_cut() {
         return `
-            var err = "noerror";
-            var links = document.getElementsByTagName("link");
+            var d = document;
+            var delarr = new Array();
+            var links = d.getElementsByTagName("link");
             for(var i=0; i<links.length; i++) {
                 var link = links.item(i);
-                link.removeAttribute("href");
+                var href = link.getAttribute("href");
+                if(is_css_file(href)) {
+                    delarr.push(href);
+                }
+            }
+            for(var i=0; i<delarr.length; i++) {
+                var line = delarr[i];
+                delete_link(line);
+            }
+            var tags = d.getElementsByTagName("*");
+            for(var i=0; i<tags.length; i++) {
+                var tag = tags.item(i);
+                var style = tag.getAttribute("style");
+                if(style !== null || style !== "") {
+                    tag.removeAttribute("style");
+                }
+            }
+            var styles = d.getElementsByTagName("style");
+            for(i=0; i<styles.length; i++) {
+                var style = styles.item(i);
+                style.textContent = null;
+            }
+            function is_css_file(href) {
+                var pat = new RegExp(".+\.css");
+                if(pat.test(href)) return true;
+                else return false;
+            }
+            function delete_link(line) {
+                var lks = d.getElementsByTagName("link");
+                for(var j=0; j<lks.length; j++) {
+                    var lk = lks.item(j);
+                    var hf = lk.getAttribute("href");
+                    if(hf === line) {
+                        lk.parentNode.removeChild(lk);
+                        break;
+                    }
+                }
             }
             require("electron").ipcRenderer.send("cc-reply", 
                 JSON.parse(JSON.stringify({status:"ok"}))
@@ -91,8 +128,7 @@ module.exports = class presvUtil {
             for(var i=0; i<img.length; i++) {
                 var imgtag = img.item(i);
                 imgtag.setAttribute("style", "border:1px solid red;");
-                var span = document.createElement("span");
-                span.id = "bkm-img-span-" + i;
+                var span_id = "bkm-img-span-" + i;
                 var src_val = imgtag.getAttribute("src");
                 var fname = get_img_filename(src_val);
                 var alt_val = imgtag.getAttribute("alt");
@@ -109,10 +145,9 @@ module.exports = class presvUtil {
                         html_str += "filename: " + fname;
                     }
                 }
-                span.innerHTML = html_str;
                 var css_txt = "color:#fff;font-size:12px;padding:1px;background:#BF0000;";
-                span.setAttribute("style", css_txt);
-                imgtag.parentNode.insertBefore(span, imgtag.nextSibling);
+                var span = '<span id="' + span_id + '" style="' + css_txt + '">' + html_str + '</span>';
+                imgtag.insertAdjacentHTML("beforebegin", span);
             }
             function get_img_filename(str) {
                 var ret = "";
@@ -131,6 +166,42 @@ module.exports = class presvUtil {
                 else return false;
             }
             require("electron").ipcRenderer.send("alt-reply", 
+                JSON.parse(JSON.stringify({status:"ok"}))
+            );
+        `;
+    }
+
+    static target_attr() {
+        return `
+            var ats = document.getElementsByTagName("a");
+            var i = 0;
+            for(var i=0; i<ats.length; i++) {
+                var atag = ats.item(i);
+                var ataghtml = atag.outerHTML;
+                ataghtml = _text_clean(ataghtml);
+                if(_target_attr_check(ataghtml)) {
+                    var target_vl = atag.getAttribute("target");
+                    var span_id = "bkm-target-attr-span-" + i;
+                    var span_html = (target_vl === "") ? "target属性有:(空)" : "target属性有:" + target_vl;
+                    var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;";
+                    var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
+                    atag.insertAdjacentHTML("beforebegin", span);
+                    i++;
+                }
+            }
+            function _target_attr_check(str) {
+                var pt = new RegExp('target=".*?"');
+                if(pt.test(str)) return true;
+                else return false;
+            }
+            function _text_clean(str) {
+                var ret = "";
+                ret = str.replace(new RegExp("^ +", "mg"), "");
+                ret = ret.replace(new RegExp("\\t+", "mg"), "");
+                ret = ret.replace(new RegExp("(\\r\\n|\\r|\\n)", "mg"), "");
+                return str;
+            }
+            require("electron").ipcRenderer.send("target-reply", 
                 JSON.parse(JSON.stringify({status:"ok"}))
             );
         `;
