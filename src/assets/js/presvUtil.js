@@ -132,6 +132,9 @@ module.exports = class presvUtil {
                 var src_val = imgtag.getAttribute("src");
                 var fname = get_img_filename(src_val);
                 var alt_val = imgtag.getAttribute("alt");
+                if(alt_val === null) {
+                    alt_val = alt_attr_from_dirtycode(imgtag);
+                }
                 var html_str = "";
                 if(alt_attr_check(imgtag)) {
                     html_str += "alt: " + alt_val;
@@ -149,6 +152,16 @@ module.exports = class presvUtil {
                 var span = '<span id="' + span_id + '" style="' + css_txt + '">' + html_str + '</span>';
                 imgtag.insertAdjacentHTML("beforebegin", span);
             }
+            tag_link_img();
+            function alt_attr_from_dirtycode(obj) {
+                var ret = "";
+                var imgtag = obj.outerHTML;
+                var pt = new RegExp('(alt=")(.*?)(")');
+                if(pt.test(imgtag)) {
+                    ret = imgtag.match(pt)[2];
+                }
+                return ret;
+            }
             function get_img_filename(str) {
                 var ret = "";
                 var pat = new RegExp("(.+)\/(.+\.)(JPG|jpg|GIF|gif|PNG|png|BMP|bmp)$");
@@ -164,6 +177,18 @@ module.exports = class presvUtil {
                 var pt2 = new RegExp('alt=');
                 if(pt1.test(txt) && pt2.test(txt)) return true;
                 else return false;
+            }
+            function tag_link_img() {
+                var ats = document.getElementsByTagName("a");
+                var css_txt = "border:2px dotted red;";
+                for(var i=0; i<ats.length; i++) {
+                    var atag = ats.item(i);
+                    var imgs = atag.getElementsByTagName("img");
+                    for(var j=0; j<imgs.length; j++) {
+                        var img = imgs.item(j);
+                        img.setAttribute("style", css_txt);
+                    }
+                }
             }
             require("electron").ipcRenderer.send("alt-reply", 
                 JSON.parse(JSON.stringify({status:"ok"}))
@@ -206,4 +231,5 @@ module.exports = class presvUtil {
             );
         `;
     }
+
 }
