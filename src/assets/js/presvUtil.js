@@ -230,7 +230,7 @@ module.exports = class presvUtil {
         `;
     }
 
-    static semantic_check(operation) {
+    static semantic_check() {
         return `
             function tag_paragraph() {
                 var ps = document.getElementsByTagName("p");

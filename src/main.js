@@ -3,6 +3,8 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const fs = require("fs");
 const { Menu } = require("electron");
+const { ipcMain } = require("electron");
+const { clipboard } = require("electron");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
@@ -57,7 +59,6 @@ function createWindow() {
 
 app.on("ready", () => {
     createWindow();
-    const {ipcMain} = require("electron");
     ipcMain.on('w3cButton-click', (event, arg) => {
         let w3cWindow = new BrowserWindow({width: 1024, height: 768});
         w3cWindow.on("closed", () => { w3cWindow = null });
@@ -70,7 +71,7 @@ app.on("ready", () => {
     ipcMain.on("reply", (event, arg) => {
         let argval = arg.reptext;
         argval = argval.replace(/<my:br>/g, "\r\n");
-        require("electron").clipboard.writeText(argval);
+        clipboard.writeText(argval);
     });
     ipcMain.on("ccButton-click", (event, arg) => {
         if(presvWindow === null) {
