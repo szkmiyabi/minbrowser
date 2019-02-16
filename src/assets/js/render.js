@@ -142,13 +142,6 @@ function fontDefaultButton() {
     };
 }
 
-function devToolButton() {
-    var webview = document.querySelector("webview");
-    document.querySelector("#devtool").onclick = function() {
-        webview.openDevTools();
-    };
-}
-
 function nextButton() {
     document.querySelector("#next").onclick = function() {
         var crIdx = urlArrIdx;

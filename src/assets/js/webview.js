@@ -9,7 +9,6 @@ window.onload = function() {
     prevButton();
     ungoButton();
     regoButton();
-    devToolButton();
     fontLargeButton();
     fontDefaultButton();
     enterUrlText();
