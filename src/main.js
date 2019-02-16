@@ -8,6 +8,7 @@ const { clipboard } = require("electron");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
+let w3cWindow = null;
 let presvWindow = null;
 
 const template = [
@@ -60,13 +61,25 @@ function createWindow() {
 app.on("ready", () => {
     createWindow();
     ipcMain.on('w3cButton-click', (event, arg) => {
-        let w3cWindow = new BrowserWindow({width: 1024, height: 768});
-        w3cWindow.on("closed", () => { w3cWindow = null });
-        w3cWindow.loadURL(arg.winurl);
-        //w3cWindow.webContents.toggleDevTools();
-        w3cWindow.webContents.on("did-finish-load", () => {
-            w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
-        });
+        if(w3cWindow === null) {
+            w3cWindow = new BrowserWindow({width: 1024, height:768});
+            w3cWindow.on("closed", () => {w3cWindow = null});
+            w3cWindow.loadURL(arg.winurl);
+            //w3cWindow.webContents.toggleDevTools();
+            w3cWindow.webContents.on("did-finish-load", () => {
+                w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
+            });
+        } else {
+            let nowurl = w3cWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                w3cWindow.loadURL(arg.winurl);
+                w3cWindow.webContents.on("did-finish-load", () => {
+                    w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
+                });
+            } else {
+                w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
+            }
+        }
     });
     ipcMain.on("reply", (event, arg) => {
         let argval = arg.reptext;
