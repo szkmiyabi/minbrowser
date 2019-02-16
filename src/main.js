@@ -27,6 +27,24 @@ const rmenu = Menu.buildFromTemplate([
         }
     },
     {
+        label: "戻る",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            if(crWindow.webContents.canGoBack()) {
+                crWindow.webContents.goBack();
+            }
+        }
+    },
+    {
+        label: "進む",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            if(crWindow.webContents.canGoForward()) {
+                crWindow.webContents.goForward();
+            }
+        }
+    },
+    {
         label: "ズーム200％にする",
         click: () => {
             let crWindow = BrowserWindow.getFocusedWindow();
