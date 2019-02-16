@@ -269,6 +269,18 @@ function structCheckButton() {
     };
 }
 
+function infoButton() {
+    document.querySelector("#infoview").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        let cmb = document.querySelector("#urlCombo");
+        let cmbidx = cmb.selectedIndex;
+        let crno = cmb.getElementsByTagName("option")[cmbidx].innerText;
+        require("electron").ipcRenderer.send("infoviewButton-click", {
+            viewno: crno, viewurl: crurl,
+        });
+    }
+}
+
 function createUrlDatas(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});

@@ -102,6 +102,11 @@ app.on("ready", () => {
         argval = argval.replace(/<my:br>/g, "\r\n");
         clipboard.writeText(argval);
     });
+    ipcMain.on("infoviewButton-click", (event, arg) => {
+        let pageid = arg.viewno;
+        let pageurl = arg.viewurl;
+        clipboard.writeText(pageid + "\r\n" + pageurl);
+    });
     ipcMain.on("ccButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768});

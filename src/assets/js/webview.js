@@ -17,6 +17,7 @@ window.onload = function() {
     altCheckButton();
     targetCheckButton();
     structCheckButton();
+    infoButton();
 };
 
 function doLayout() {
