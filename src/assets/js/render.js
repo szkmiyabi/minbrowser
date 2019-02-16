@@ -7,17 +7,41 @@ let urlArr = [];
 let urlArrIdx = 0;
 let homeUrl = "https://www.google.co.jp";
 
-//const w3c_urlbase = "https://validator.w3.org/check?ss=1&group=1&verbose=1&uri=";
 const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
 
-function webviewNewWindowInit() {
-    var webview  = document.querySelector("webview");
+function initWebview() {
+    var webview = document.querySelector("#webview");
+    webview.addEventListener("dom-ready", updateUrlText);
     webview.addEventListener("new-window", (e) => {
         const protocol = require("url").parse(e.url).protocol;
         if(protocol === "http:" || protocol === "https:") {
             let win = new BrowserWindow({width: 1024, height: 768});
             win.loadURL(e.url);
         }
+    });
+    const Menu = require("electron").remote.Menu;
+    const webviewRightMenu = Menu.buildFromTemplate([
+        {
+            label: "DevToolを開く",
+            click: () => {
+                webview.openDevTools();
+            }
+        },
+        {
+            label: "ソースコードを表示する",
+            click: () => {
+                var crWindow = BrowserWindow.getFocusedWindow();
+                var crurl = webview.src;
+                crWindow.webContents.executeJavaScript(`
+                    require("electron").ipcRenderer.send("view-source-click",
+                        JSON.parse(JSON.stringify({winurl: "${crurl}"}))
+                    );
+                `);
+            }
+        }
+    ]);
+    webview.addEventListener("context-menu", () => {
+        webviewRightMenu.popup();
     });
 }
 
@@ -92,11 +116,6 @@ function getControlsHeight() {
     } else {
         return 0;
     }
-}
-
-function initWebview() {
-    var webview = document.querySelector("#webview");
-    webview.addEventListener("dom-ready", updateUrlText);
 }
 
 function updateUrlText() {

@@ -2,7 +2,6 @@ window.onresize = doLayout;
 
 window.onload = function() {
     doLayout();
-    webviewNewWindowInit();
     initWebview();
     openButton();
     homeButton();

@@ -6,6 +6,16 @@ const { Menu } = require("electron");
 const { ipcMain } = require("electron");
 const { clipboard } = require("electron");
 
+const rmenu = Menu.buildFromTemplate([
+    {
+        label: "DevToolを開く",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            crWindow.webContents.toggleDevTools();
+        }
+    }
+]);
+
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
 let w3cWindow = null;
@@ -57,6 +67,12 @@ function createWindow() {
    //const menu = Menu.buildFromTemplate(template);
    Menu.setApplicationMenu(null);
 }
+
+app.on("browser-window-created", (event, win) => {
+    win.webContents.on("context-menu", (e, params) => {
+        rmenu.popup(win, params.x, params.y);
+    });
+});
 
 app.on("ready", () => {
     createWindow();
@@ -173,7 +189,11 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("struct-reply", (event, arg) => {});
+    ipcMain.on("view-source-click", (event, arg) => {
+        let srcWindow = new BrowserWindow({width: 1024, height: 768});
+        srcWindow.on("closed", () => {srcWindow = null});
+        srcWindow.loadURL("view-source:" + arg.winurl);
+    });
 });
 app.on("window-all-closed", () => {
    if(process.platform !== "darwin") {
