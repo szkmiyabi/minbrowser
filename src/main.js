@@ -105,7 +105,6 @@ const template = [
 ];
 
 function createWindow() {
-
    mainWindow = new BrowserWindow({ width: 1140, height: 740});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
    //mainWindow.toggleDevTools();

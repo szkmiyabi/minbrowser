@@ -91,13 +91,14 @@ function enterUrlText() {
 }
 
 function resetUrlCombo() {
-    if(document.querySelector("#urlCombo").getElementsByTagName("option").length > 0) {
-        var opts = document.querySelector("#urlCombo").getElementsByTagName("option");
-        for(var i=0; i<opts.length; i++) {
-            var opt = opts.item(i);
-            document.querySelector("#urlCombo").removeChild(opt);
+   var cmb = document.querySelector("#urlCombo");
+   if(cmb.getElementsByTagName("option").length > 0) {
+        while(cmb.firstChild) {
+            cmb.removeChild(cmb.firstChild);
         }
-    }
+        urlArr = [];
+        urlArrIdx = 0;
+   }
 }
 
 function createUrlCombo() {
@@ -114,11 +115,6 @@ function createUrlCombo() {
     document.querySelector("#urlCombo").onchange = function() {
         changeUrl();
     };
-}
-
-function resetUrlCombo() {
-    urlArr = [];
-    urlArrIdx = 0;
 }
 
 function getControlsHeight() {
@@ -292,6 +288,7 @@ function createUrlDatas(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});
     reader.on("line", (data) => {
-        urlArr[urlArr.length] = data.split("\t");
+        var idx = urlArr.length;
+        urlArr[idx] = data.split("\t");
     }).on("close", createUrlCombo);
 }
