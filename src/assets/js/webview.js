@@ -9,8 +9,6 @@ window.onload = function() {
     prevButton();
     ungoButton();
     regoButton();
-    fontLargeButton();
-    fontDefaultButton();
     enterUrlText();
     w3cButton();
     cssCutButton();
@@ -18,6 +16,7 @@ window.onload = function() {
     targetCheckButton();
     structCheckButton();
     infoButton();
+    browseButton();
 };
 
 function doLayout() {

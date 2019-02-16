@@ -38,6 +38,18 @@ function initWebview() {
                     );
                 `);
             }
+        },
+        {
+            label: "ズーム200％にする",
+            click: () => {
+                webview.setZoomFactor(2.0);
+            }
+        },
+        {
+            label: "ズーム100％に戻す",
+            click: () => {
+                webview.setZoomFactor(1.0);
+            }
         }
     ]);
     webview.addEventListener("context-menu", () => {
@@ -127,20 +139,6 @@ function event_igniter(obj) {
     event.initEvent("change", true, false);
     obj.dispatchEvent(event);
 };
-
-function fontLargeButton() {
-    var webview = document.querySelector("webview");
-    document.querySelector("#f-large").onclick = function() {
-        webview.setZoomFactor(2.0);
-    };
-}
-
-function fontDefaultButton() {
-    var webview = document.querySelector("webview");
-    document.querySelector("#f-default").onclick = function() {
-        webview.setZoomFactor(1.0);
-    };
-}
 
 function nextButton() {
     document.querySelector("#next").onclick = function() {
@@ -279,6 +277,15 @@ function infoButton() {
             viewno: crno, viewurl: crurl,
         });
     }
+}
+
+function browseButton() {
+    document.querySelector("#browse").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("browseButton-click", {
+            winurl: crurl
+        });
+    };
 }
 
 function createUrlDatas(path) {
