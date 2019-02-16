@@ -123,7 +123,7 @@ app.on("ready", () => {
     createWindow();
     ipcMain.on('w3cButton-click', (event, arg) => {
         if(w3cWindow === null) {
-            w3cWindow = new BrowserWindow({width: 1024, height:768});
+            w3cWindow = new BrowserWindow({width: 1024, height:768, webPreferences: { nodeIntegration: false }});
             w3cWindow.on("closed", () => {w3cWindow = null});
             w3cWindow.loadURL(arg.winurl);
             //w3cWindow.webContents.toggleDevTools();
@@ -154,7 +154,7 @@ app.on("ready", () => {
     });
     ipcMain.on("ccButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
             presvWindow.webContents.on("did-finish-load", () => {
@@ -175,7 +175,7 @@ app.on("ready", () => {
     ipcMain.on("cc-reply", (event, arg) => {});
     ipcMain.on("browseButton-click", (event, arg) => {
         if(brWindow === null) {
-            brWindow = new BrowserWindow({width: 1024, height: 768});
+            brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             brWindow.on("closed", () => { brWindow = null });
             brWindow.loadURL(arg.winurl);
         } else {
@@ -187,7 +187,7 @@ app.on("ready", () => {
     });
     ipcMain.on("altButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
@@ -210,7 +210,7 @@ app.on("ready", () => {
     ipcMain.on("alt-reply", (event, arg) => {});
     ipcMain.on("targetButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
@@ -232,7 +232,7 @@ app.on("ready", () => {
     ipcMain.on("target-reply", (event, arg) => {});
     ipcMain.on("structButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768});
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
