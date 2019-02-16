@@ -104,23 +104,6 @@ module.exports = class presvUtil {
         `;
     }
 
-    static add_label() {
-        return `
-            var add_label = function(obj, cnt) {
-                var d = document;
-                var span = d.createElement("span");
-                var tag_name = obj.tagName;
-                    tag_name = tag_name.toLowerCase();
-                var span_id = "bkm-" + tag_name + "-span-" + cnt;
-                var css_txt = "color:#000;font-size:90%;opacity:0.8;display:block;border:1px solid red;padding:1px;background:yellow;position:absolute;top:2px;left:2px;";
-                span.innerHTML = '&lt;' + tag_name + '&gt;';
-                span.id = span_id;
-                span.setAttribute("style", css_txt);
-                obj.appendChild(span);
-            };
-        `;
-    }
-
     static image_alt() {
         return `
             var fname_flg = true;

@@ -82,7 +82,15 @@ app.on("ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
             });
         } else {
-            presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
+                });
+            } else {            
+                presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
+            }
         }
     });
     ipcMain.on("cc-reply", (event, arg) => {});
@@ -96,7 +104,15 @@ app.on("ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
             });
         } else {
-            presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
+            }
         }
 
     });
@@ -111,7 +127,15 @@ app.on("ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
             });
         } else {
-            presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
+            }
         }
     });
     ipcMain.on("target-reply", (event, arg) => {});
@@ -125,7 +149,15 @@ app.on("ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
             });
         } else {
-            presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+            }
         }
     });
     ipcMain.on("struct-reply", (event, arg) => {});
