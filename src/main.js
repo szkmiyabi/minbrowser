@@ -123,7 +123,7 @@ app.on("ready", () => {
     createWindow();
     ipcMain.on('w3cButton-click', (event, arg) => {
         if(w3cWindow === null) {
-            w3cWindow = new BrowserWindow({width: 1024, height:768, webPreferences: { nodeIntegration: false }});
+            w3cWindow = new BrowserWindow({width: 1024, height:768});
             w3cWindow.on("closed", () => {w3cWindow = null});
             w3cWindow.loadURL(arg.winurl);
             //w3cWindow.webContents.toggleDevTools();
