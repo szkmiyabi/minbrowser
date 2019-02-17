@@ -45,9 +45,6 @@ module.exports = class presvUtil {
                     }
                 }
             }
-            require("electron").ipcRenderer.send("cc-reply", 
-                JSON.parse(JSON.stringify({status:"ok"}))
-            );
         `;
     }
 
@@ -173,9 +170,6 @@ module.exports = class presvUtil {
                     }
                 }
             }
-            require("electron").ipcRenderer.send("alt-reply", 
-                JSON.parse(JSON.stringify({status:"ok"}))
-            );
         `;
     }
 
@@ -207,9 +201,6 @@ module.exports = class presvUtil {
                 ret = ret.replace(new RegExp("(\\r\\n|\\r|\\n)", "mg"), "");
                 return str;
             }
-            require("electron").ipcRenderer.send("target-reply", 
-                JSON.parse(JSON.stringify({status:"ok"}))
-            );
         `;
     }
 
@@ -361,9 +352,6 @@ module.exports = class presvUtil {
             tag_semantic();
             tag_list();
             tag_table();
-            require("electron").ipcRenderer.send("struct-reply", 
-                JSON.parse(JSON.stringify({status:"ok"}))
-            );
         `;
     }
 

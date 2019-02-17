@@ -59,18 +59,6 @@ const rmenu = Menu.buildFromTemplate([
         }
     },
     {
-        label: "ソースコードを表示する",
-        click: () => {
-            var crWindow = BrowserWindow.getFocusedWindow();
-            var crurl = crWindow.webContents.getURL();
-            crWindow.webContents.executeJavaScript(`
-                require("electron").ipcRenderer.send("fw-view-source-click",
-                    JSON.parse(JSON.stringify({winurl: "${crurl}"}))
-                );
-            `);
-        }
-    },
-    {
         label: "戻る",
         click: () => {
             let crWindow = BrowserWindow.getFocusedWindow();
@@ -172,7 +160,6 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("cc-reply", (event, arg) => {});
     ipcMain.on("browseButton-click", (event, arg) => {
         if(brWindow === null) {
             brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -206,7 +193,6 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("alt-reply", (event, arg) => {});
     ipcMain.on("targetButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -251,11 +237,6 @@ app.on("ready", () => {
         }
     });
     ipcMain.on("view-source-click", (event, arg) => {
-        let srcWindow = new BrowserWindow({width: 1024, height: 768});
-        srcWindow.on("closed", () => {srcWindow = null});
-        srcWindow.loadURL("view-source:" + arg.winurl);
-    });
-    ipcMain.on("fw-view-source-click", (event, arg) => {
         let srcWindow = new BrowserWindow({width: 1024, height: 768});
         srcWindow.on("closed", () => {srcWindow = null});
         srcWindow.loadURL("view-source:" + arg.winurl);
