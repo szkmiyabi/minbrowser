@@ -6,6 +6,50 @@ const { Menu } = require("electron");
 const { ipcMain } = require("electron");
 const { clipboard } = require("electron");
 
+const presvUtil = require(__dirname + "/assets/js/presvUtil");
+let mainWindow;
+let w3cWindow = null;
+let presvWindow = null;
+let brWindow = null;
+
+const tmenu = Menu.buildFromTemplate([
+    {
+        label: "Edit",
+        submenu: [
+            {role: "undo"},
+            {role: "redo"},
+            {role: "separator"},
+            {role: "cut"},
+            {role: "copy"},
+            {role: "paste"},
+            {role: "pasteandmatchstyle"},
+            {role: "delete"},
+            {role: "selectall"}
+        ]
+    },
+    {
+        label: "View",
+        submenu: [
+            {role: "reload"},
+            {role: "forceload"},
+            {role: "toggledevtools"},
+            {type: "separator"},
+            {role: "resetzoom"},
+            {role: "zoomin"},
+            {role: "zoomout"},
+            {type: "separator"},
+            {role: "togglefullscreen"}
+        ]
+    },
+    {
+        role: "window",
+        submenu: [
+            {role: "minimize"},
+            {role: "close"}
+        ]
+    }
+]);
+
 const rmenu = Menu.buildFromTemplate([
     {
         label: "DevToolを開く",
@@ -67,63 +111,13 @@ const rmenu = Menu.buildFromTemplate([
     }
 ]);
 
-const presvUtil = require(__dirname + "/assets/js/presvUtil");
-let mainWindow;
-let w3cWindow = null;
-let presvWindow = null;
-let brWindow = null;
-
-const template = [
-    {
-        label: "Edit",
-        submenu: [
-            {role: "undo"},
-            {role: "redo"},
-            {role: "separator"},
-            {role: "cut"},
-            {role: "copy"},
-            {role: "paste"},
-            {role: "pasteandmatchstyle"},
-            {role: "delete"},
-            {role: "selectall"}
-        ]
-    },
-    {
-        label: "View",
-        submenu: [
-            {role: "reload"},
-            {role: "forceload"},
-            {role: "toggledevtools"},
-            {type: "separator"},
-            {role: "resetzoom"},
-            {role: "zoomin"},
-            {role: "zoomout"},
-            {type: "separator"},
-            {role: "togglefullscreen"}
-        ]
-    },
-    {
-        role: "window",
-        submenu: [
-            {role: "minimize"},
-            {role: "close"}
-        ]
-    }
-];
-
 function createWindow() {
    mainWindow = new BrowserWindow({ width: 1140, height: 740});
    mainWindow.loadURL("file://" + __dirname + "/index.html");
    //mainWindow.toggleDevTools();
-   //const menu = Menu.buildFromTemplate(template);
+   //Menu.setApplicationMenu(tmenu);
    Menu.setApplicationMenu(null);
 }
-
-app.on("browser-window-created", (event, win) => {
-    win.webContents.on("context-menu", (e, params) => {
-        rmenu.popup(win, params.x, params.y);
-    });
-});
 
 app.on("ready", () => {
     createWindow();
@@ -211,7 +205,6 @@ app.on("ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
             }
         }
-
     });
     ipcMain.on("alt-reply", (event, arg) => {});
     ipcMain.on("targetButton-click", (event, arg) => {
@@ -269,11 +262,19 @@ app.on("ready", () => {
     });
 
 });
+
+app.on("browser-window-created", (event, win) => {
+    win.webContents.on("context-menu", (e, params) => {
+        rmenu.popup(win, params.x, params.y);
+    });
+});
+
 app.on("window-all-closed", () => {
    if(process.platform !== "darwin") {
         app.quit();
    }
 });
+
 app.on("activate", () => {
     if(mainWindow === null) {
         createWindow();
