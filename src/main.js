@@ -45,6 +45,13 @@ const rmenu = Menu.buildFromTemplate([
         }
     },
     {
+        label: "再読み込み",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            crWindow.webContents.reload();
+        }
+    },
+    {
         label: "ズーム200％にする",
         click: () => {
             let crWindow = BrowserWindow.getFocusedWindow();

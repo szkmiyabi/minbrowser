@@ -40,6 +40,12 @@ function initWebview() {
             }
         },
         {
+            label: "再読み込み",
+            click: () => {
+                webview.reload();
+            }
+        },
+        {
             label: "ズーム200％にする",
             click: () => {
                 webview.setZoomFactor(2.0);
@@ -85,7 +91,13 @@ function changeUrl() {
 function enterUrlText() {
     document.querySelector("#urlText").addEventListener("keypress", (event) => {
         if(event.keyCode == 13) {
-            navigateTo(document.querySelector("#urlText").value);
+            let urltxt = document.querySelector("#urlText").value;
+            let urlpt = new RegExp(/^(http.*:\/\/)/);
+            if(urlpt.test(urltxt)) {
+                navigateTo(urltxt);
+            } else {
+                alert("[" + urltxt + "]" + "は有効なURLではありません！");
+            }
         }
     });
 }
@@ -188,6 +200,17 @@ function homeButton() {
     document.querySelector("#home").onclick = function() {
         navigateTo(homeUrl);
         document.querySelector("#urlText").value = homeUrl;
+    };
+}
+
+function refetchButton() {
+    document.querySelector("#refetch").onclick = function() {
+        let cmb = document.querySelector("#urlCombo");
+        if(urlArr.length > 0 && cmb.getElementsByTagName("option").length > 0) {
+            changeUrl();
+        } else {
+            alert("URL一覧ファイルを選択していないため、再読み込みするページはありません！");
+        }
     };
 }
 
