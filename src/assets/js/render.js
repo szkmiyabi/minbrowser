@@ -5,8 +5,9 @@ const readline = require("readline");
 
 let urlArr = [];
 let urlArrIdx = 0;
-let homeUrl = "https://www.google.co.jp";
+let urlFileOpened = false;
 
+let homeUrl = "https://www.google.co.jp";
 const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
 
 function getControlsHeight() {
@@ -245,9 +246,8 @@ function browseButton() {
 
 function openButton() {
     document.getElementById("open").addEventListener("click", () => {
-        openFile();
         resetUrlCombo();
-        createUrlCombo();
+        openFile();
     });
 }
 
@@ -264,44 +264,87 @@ function openFile() {
         },
         (fileNames) => {
             if(fileNames) {
-                createUrlDatas(fileNames[0]);
+                loadToUrlArr(fileNames[0]);
             }
         }
     );
 }
 
-function createUrlDatas(path) {
+function loadToUrlArr(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});
     reader.on("line", (data) => {
         var idx = urlArr.length;
         urlArr[idx] = data.split("\t");
-    }).on("close", createUrlCombo);
+    }).on("close", () => {
+        createUrlCombo();
+    });
+}
+
+function createUrlCombo() {
+    if(validate_urlArr(urlArr) === false) {
+        const win = BrowserWindow.getFocusedWindow();
+        dialog.showMessageBox(
+            win,
+            {
+                type: "warning",
+                buttons: ["OK"],
+                message: "ファイルのロードに失敗しました！",
+                detail: "URLファイルを開けません。ファイルが間違っていないか確認してください。"
+            }
+        );
+        urlArr = [];
+        urlArrIdx = 0;
+        return;
+    }
+    for(var i=0; i<urlArr.length; i++) {
+        var row = urlArr[i];
+        var elm = document.createElement("option");
+        elm.innerText = row[0];
+        document.querySelector("#urlCombo").appendChild(elm);
+    }
+    urlArrIdx = 0;
+    var crurl = urlArr[urlArrIdx][1];
+    navigateTo(crurl);
+    document.querySelector("#urlText").value = crurl;
+    document.querySelector("#urlCombo").onchange = function() {
+        changeUrl();
+    };
+    urlFileOpened = true;
 }
 
 function resetUrlCombo() {
-    var cmb = document.querySelector("#urlCombo");
-    if(cmb.getElementsByTagName("option").length > 0) {
-         while(cmb.firstChild) {
-             cmb.removeChild(cmb.firstChild);
-         }
-         urlArr = [];
-         urlArrIdx = 0;
+    if(urlFileOpened === true) {
+        var cmb = document.querySelector("#urlCombo");
+        if(cmb.getElementsByTagName("option").length > 0) {
+             while(cmb.firstChild) {
+                 cmb.removeChild(cmb.firstChild);
+             }
+             urlArr = [];
+             urlArrIdx = 0;
+        }
     }
- }
+}
+
+function validate_urlArr() {
+    let err_flg = false;
+    let err_cnt = 0;
+    let pid_pt = new RegExp(/^[a-zA-Z]+/);
+    let purl_pt = new RegExp(/^http.*:\/\//);
+    for(var i=0; i<urlArr.length; i++) {
+        var tmp = urlArr[i];
+        var v1 = tmp[0];
+        var v2 = tmp[1];
+        if(v1 === "" || (typeof v1) === "undefined" || pid_pt.test(v1) === false) {
+            err_cnt++;
+        }
+        if(v2 === "" || (typeof v2) === "undefined" || purl_pt.test(v2) === false) {
+            err_cnt++;
+        }
+    }
+    if(err_cnt === 0) {
+        err_flg = true;
+    }
+    return err_flg;
+}
  
- function createUrlCombo() {
-     for(var i=0; i<urlArr.length; i++) {
-         var row = urlArr[i];
-         var elm = document.createElement("option");
-         elm.innerText = row[0];
-         document.querySelector("#urlCombo").appendChild(elm);
-     }
-     urlArrIdx = 0;
-     var crurl = urlArr[urlArrIdx][1];
-     navigateTo(crurl);
-     document.querySelector("#urlText").value = crurl;
-     document.querySelector("#urlCombo").onchange = function() {
-         changeUrl();
-     };
- }
