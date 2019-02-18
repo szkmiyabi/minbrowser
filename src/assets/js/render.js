@@ -9,6 +9,15 @@ let homeUrl = "https://www.google.co.jp";
 
 const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
 
+function getControlsHeight() {
+    var controls = document.querySelector("#controls");
+    if(controls) {
+        return controls.offsetHeight;
+    } else {
+        return 0;
+    }
+}
+
 function initWebview() {
     var webview = document.querySelector("#webview");
     webview.addEventListener("dom-ready", updateUrlText);
@@ -68,7 +77,7 @@ function navigateTo(url) {
 }
 
 function updateUrlText() {
-    document.getElementById("urlText").value = document.querySelector("webview").src;
+    document.getElementById("#urlText").value = document.querySelector("webview").src;
 }
 
 function changeUrl() {
@@ -101,52 +110,6 @@ function enterUrlText() {
         }
     });
 }
-
-function resetUrlCombo() {
-   var cmb = document.querySelector("#urlCombo");
-   if(cmb.getElementsByTagName("option").length > 0) {
-        while(cmb.firstChild) {
-            cmb.removeChild(cmb.firstChild);
-        }
-        urlArr = [];
-        urlArrIdx = 0;
-   }
-}
-
-function createUrlCombo() {
-    for(var i=0; i<urlArr.length; i++) {
-        var row = urlArr[i];
-        var elm = document.createElement("option");
-        elm.innerText = row[0];
-        document.querySelector("#urlCombo").appendChild(elm);
-    }
-    urlArrIdx = 0;
-    var crurl = urlArr[urlArrIdx][1];
-    navigateTo(crurl);
-    document.querySelector("#urlText").value = crurl;
-    document.querySelector("#urlCombo").onchange = function() {
-        changeUrl();
-    };
-}
-
-function getControlsHeight() {
-    var controls = document.querySelector("#controls");
-    if(controls) {
-        return controls.offsetHeight;
-    } else {
-        return 0;
-    }
-}
-
-function updateUrlText() {
-    document.getElementById("urlText").value = webview.src;
-}
-
-function event_igniter(obj) {
-    var event = document.createEvent("HTMLEvents");
-    event.initEvent("change", true, false);
-    obj.dispatchEvent(event);
-};
 
 function nextButton() {
     document.querySelector("#next").onclick = function() {
@@ -212,33 +175,6 @@ function refetchButton() {
             alert("URL一覧ファイルを選択していないため、再読み込みするページはありません！");
         }
     };
-}
-
-function openButton() {
-    document.getElementById("open").addEventListener("click", () => {
-        openFile();
-        resetUrlCombo();
-        createUrlCombo();
-    });
-}
-
-function openFile() {
-    const win = BrowserWindow.getFocusedWindow();
-    dialog.showOpenDialog(
-        win,
-        {
-            properties: ["openFile"],
-            filters: [{
-                name: "Documents",
-                extensions: ["txt"]
-            }]
-        },
-        (fileNames) => {
-            if(fileNames) {
-                createUrlDatas(fileNames[0]);
-            }
-        }
-    );
 }
 
 function w3cButton() {
@@ -307,6 +243,33 @@ function browseButton() {
     };
 }
 
+function openButton() {
+    document.getElementById("open").addEventListener("click", () => {
+        openFile();
+        resetUrlCombo();
+        createUrlCombo();
+    });
+}
+
+function openFile() {
+    const win = BrowserWindow.getFocusedWindow();
+    dialog.showOpenDialog(
+        win,
+        {
+            properties: ["openFile"],
+            filters: [{
+                name: "Documents",
+                extensions: ["txt"]
+            }]
+        },
+        (fileNames) => {
+            if(fileNames) {
+                createUrlDatas(fileNames[0]);
+            }
+        }
+    );
+}
+
 function createUrlDatas(path) {
     var stream = fs.createReadStream(path, "utf8");
     var reader = readline.createInterface({input: stream});
@@ -315,3 +278,30 @@ function createUrlDatas(path) {
         urlArr[idx] = data.split("\t");
     }).on("close", createUrlCombo);
 }
+
+function resetUrlCombo() {
+    var cmb = document.querySelector("#urlCombo");
+    if(cmb.getElementsByTagName("option").length > 0) {
+         while(cmb.firstChild) {
+             cmb.removeChild(cmb.firstChild);
+         }
+         urlArr = [];
+         urlArrIdx = 0;
+    }
+ }
+ 
+ function createUrlCombo() {
+     for(var i=0; i<urlArr.length; i++) {
+         var row = urlArr[i];
+         var elm = document.createElement("option");
+         elm.innerText = row[0];
+         document.querySelector("#urlCombo").appendChild(elm);
+     }
+     urlArrIdx = 0;
+     var crurl = urlArr[urlArrIdx][1];
+     navigateTo(crurl);
+     document.querySelector("#urlText").value = crurl;
+     document.querySelector("#urlCombo").onchange = function() {
+         changeUrl();
+     };
+ }
