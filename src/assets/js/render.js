@@ -78,7 +78,7 @@ function navigateTo(url) {
 }
 
 function updateUrlText() {
-    document.getElementById("#urlText").value = document.querySelector("webview").src;
+    document.getElementById("urlText").value = document.querySelector("webview").src;
 }
 
 function changeUrl() {
@@ -239,6 +239,15 @@ function browseButton() {
     document.querySelector("#browse").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
         require("electron").ipcRenderer.send("browseButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
+function langButton() {
+    document.querySelector("#langcheck").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("langButton-click", {
             winurl: crurl
         });
     };

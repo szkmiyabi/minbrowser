@@ -18,6 +18,7 @@ window.onload = function() {
     infoButton();
     browseButton();
     refetchButton();
+    langButton();
 };
 
 function doLayout() {

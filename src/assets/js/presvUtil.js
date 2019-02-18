@@ -355,4 +355,48 @@ module.exports = class presvUtil {
         `;
     }
 
+    static lang_attr() {
+        return `
+            var alltags = document.getElementsByTagName("*");
+            var type = "";
+            for(var i=0; i<alltags.length; i++) {
+                var tag = alltags.item(i);
+                if(tag.hasAttribute("lang") || tag.hasAttribute("xml:lang")) {
+                    if(tag.hasAttribute("lang") && tag.hasAttribute("xml:lang")) {
+                        type = "all";
+                    } else if(tag.hasAttribute("lang") && !tag.hasAttribute("xml:lang")) {
+                        type = "lang-only";
+                    } else if(!tag.hasAttribute("lang") && tag.hasAttribute("xml:lang")) {
+                        type = "xml-lang-only";
+                    }
+
+                    var lang_vl = "";
+                    var xml_lang_vl = "";
+                    if(type === "all") {
+                        lang_vl = tag.getAttribute("lang");
+                        xml_lang_vl = tag.getAttribute("xml:lang");
+                    } else if(type === "lang-only") {
+                        lang_vl = tag.getAttribute("lang");
+                    } else if(type === "xml-lang-only") {
+                        xml_lang_vl = tag.getAttribute("xml:lang");
+                    }
+                    var span_id = "bkm-lang-attr-span-" + i;
+                    var span_html = "";
+                    if(type === "all") {
+                        span_html = (lang_vl === "") ? "lang属性有:(空)" : "lang属性有: " + lang_vl;
+                        span_html += (xml_lang_vl === "") ? " , xml:lang属性有:(空)" : " , xml:lang属性有: " + xml_lang_vl;
+                    } else if(type === "lang-only") {
+                        span_html = (lang_vl === "") ? "lang属性有:(空)" : "lang属性有: " + lang_vl;
+                    } else if(type === "xml-lang-only") {
+                        span_html = (xml_lang_vl === "") ? "xml:lang属性有:(空)" : "xml:lang属性有: " + xml_lang_vl;
+                    }
+                    span_html = '&lt;' + tag.tagName.toLowerCase() + '&gt;要素 , ' + span_html;
+                    var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;";
+                    var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
+                    tag.insertAdjacentHTML("afterbegin", span);
+                }
+            }
+        `;
+    }
+
 }

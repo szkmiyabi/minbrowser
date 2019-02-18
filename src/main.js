@@ -241,6 +241,27 @@ app.on("ready", () => {
         srcWindow.on("closed", () => {srcWindow = null});
         srcWindow.loadURL("view-source:" + arg.winurl);
     });
+    ipcMain.on("langButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
+            });
+        } else {
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
+            }
+        }
+    });
 
 });
 
