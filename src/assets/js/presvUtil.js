@@ -210,8 +210,8 @@ module.exports = class presvUtil {
                 var ps = document.getElementsByTagName("p");
                 for(var i=0; i<ps.length; i++) {
                     var p = ps.item(i);
-                    p.setAttribute("style", "border:1px solid red; position: relative;");
-                    add_label(p, i, "afterbegin", "#B94A48");
+                    p.setAttribute("style", "border:1px solid #3A87AD; position: relative;");
+                    add_label(p, i, "afterbegin", "#3A87AD");
                 }
             }
             function tag_heading() {
@@ -258,7 +258,7 @@ module.exports = class presvUtil {
                         var ts = document.getElementsByTagName(tag);
                         for(var i=0; i<ts.length; i++) {
                             var t = ts.item(i);
-                            t.setAttribute("style", "border:1px solid red; position: relative;");
+                            t.setAttribute("style", "border:1px solid #808080; position: relative;");
                             add_label(t, i, "afterbegin", "#888888");
                         }
                     }
@@ -280,7 +280,7 @@ module.exports = class presvUtil {
                         var ts = document.getElementsByTagName(tag);
                         for(var i=0; i<ts.length; i++) {
                             var t = ts.item(i);
-                            t.setAttribute("style", "border:1px solid red; position: relative;");
+                            t.setAttribute("style", "border:1px solid #468847; position: relative;");
                             add_label(t, i, "afterbegin", "#468847");
                         }
                     }
