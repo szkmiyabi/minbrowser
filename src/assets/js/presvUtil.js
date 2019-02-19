@@ -184,7 +184,7 @@ module.exports = class presvUtil {
                     var target_vl = atag.getAttribute("target");
                     var span_id = "bkm-target-attr-span-" + i;
                     var span_html = (target_vl === "") ? "target属性有:(空)" : "target属性有:" + target_vl;
-                    var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;";
+                    var span_css = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
                     var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
                     atag.insertAdjacentHTML("beforebegin", span);
                 }
@@ -391,11 +391,215 @@ module.exports = class presvUtil {
                         span_html = (xml_lang_vl === "") ? "xml:lang属性有:(空)" : "xml:lang属性有: " + xml_lang_vl;
                     }
                     span_html = '&lt;' + tag.tagName.toLowerCase() + '&gt;要素 , ' + span_html;
-                    var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;";
+                    var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;border-radius:5px;";
                     var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
                     tag.insertAdjacentHTML("afterbegin", span);
                 }
             }
+        `;
+    }
+
+    static tag_label_and_title_attr() {
+        return `
+            function tag_label_label() {
+                var lbs = document.getElementsByTagName("label");
+                for(var i=0; i<lbs.length; i++) {
+                    var lb = lbs.item(i);
+                    lb.setAttribute("style", "border:1px solid #468847!important; position: relative;");
+                    var span_html = "";
+                    var span_style = "";
+                    var span_id = "bkm-label-span-" + i;
+                    var type = "";
+                    if(lb.hasAttribute("for")) {
+                        type = "for-is-yes";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
+                    } else {
+                        type = "for-is-no";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                    }
+                    if(type === "for-is-yes") {
+                        var for_vl = lb.getAttribute("for");
+                        span_html = (for_vl === "") ? "for属性有:(空)" : "for属性有: " + for_vl;
+                        span_html = '&lt;' + lb.tagName.toLowerCase() + '&gt; , ' + span_html;
+                    } else if(type === "for-is-no") {
+                        span_html = '&lt;' + lb.tagName.toLowerCase() + '&gt; , for属性なし';
+                    }
+                    var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                    lb.insertAdjacentHTML("afterbegin", span);
+                }
+            }
+            function tag_label_input() {
+                var ips = document.getElementsByTagName("input");
+                for(var i=0; i<ips.length; i++) {
+                    var ip = ips.item(i);
+                    var typeattr = "";
+                    if(!ip.hasAttribute("type")) {
+                        typeattr = "text";
+                    } else {
+                        typeattr = ip.getAttribute("type");
+                    }
+                    if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox") {
+                        var span_html = "";
+                        var span_style = "";
+                        var span_id = "bkm-input-span-" + i;
+                        ip.setAttribute("style", "border:1px solid blue; position: relative;");
+                        var type = "";
+                        if(ip.hasAttribute("id")) {
+                            type = "id-yes";
+                            span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#3A87AD;border-radius:5px;";
+                        } else {
+                            type = "id-no";
+                            span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                        }
+                        if(type === "id-yes") {
+                            var id_vl = ip.getAttribute("id");
+                            span_html = (id_vl === "") ? "id属性有:(空)" : "id属性有: " + id_vl;
+                        } else if(type === "id-no") {
+                            span_html = "id属性なし";
+                        }
+                        var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                        ip.insertAdjacentHTML("beforebegin", span);
+                    }
+                }
+            }
+            function tag_label_textarea() {
+                var tas = document.getElementsByTagName("textarea");
+                for(var i=0; i<tas.length; i++) {
+                    var ta = tas.item(i);
+                    ta.setAttribute("style", "border:1px solid blue; position: relative;");
+                    var span_html = "";
+                    var span_style = "";
+                    var span_id = "bkm-textarea-span-" + i;
+                    var type = "";
+                    if(ta.hasAttribute("id")) {
+                        type = "id-yes";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#3A87AD;border-radius:5px;";
+                    } else {
+                        type = "id-no";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                    }
+                    if(type === "id-yes") {
+                        var id_vl = ta.getAttribute("id");
+                        span_html = (id_vl === "") ? "id属性有:(空)" : "id属性有: " + id_vl;
+                    } else if(type === "id-no") {
+                        span_html = "id属性なし";
+                    }
+                    var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                    ta.insertAdjacentHTML("beforebegin", span);
+                }
+            }
+            function tag_label_select() {
+                var sls = document.getElementsByTagName("select");
+                for(var i=0; i<sls.length; i++) {
+                    var sl = sls.item(i);
+                    sl.setAttribute("style", "border:1px solid blue; position: relative;");
+                    var span_html = "";
+                    var span_style = "";
+                    var span_id = "bkm-select-span-" + i;
+                    var type = "";
+                    if(sl.hasAttribute("id")) {
+                        type = "id-yes";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#3A87AD;border-radius:5px;";
+                    } else {
+                        type = "id-no";
+                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                    }
+                    if(type === "id-yes") {
+                        var id_vl = sl.getAttribute("id");
+                        span_html = (id_vl === "") ? "id属性有:(空)" : "id属性有: " + id_vl;
+                    } else if(type === "id-no") {
+                        span_html = "id属性なし";
+                    }
+                    var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                    sl.insertAdjacentHTML("beforebegin", span);
+                }
+            }
+            function tag_title_attr() {
+                var tags = ["a", "input", "textarea", "select"];
+                var idx = tags.length;
+                var in_funcs = new Array();
+                for(var i=0; i<idx; i++) {
+                    var val = tags[i];
+                    in_funcs.push(make_funcs(val));
+                }
+                function make_funcs(tag) {
+                    return function() {
+                        var ts = document.getElementsByTagName(tag);
+                        for(var i=0; i<ts.length; i++) {
+                            var t = ts.item(i);
+                            var typeattr = "";
+                            var tag_name = t.tagName.toLowerCase();
+                            if(tag_name === "input") {
+                                if(!t.hasAttribute("type")) {
+                                    typeattr = "text";
+                                } else {
+                                    typeattr = t.getAttribute("type");
+                                }
+                                if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox") {
+                                    var span_html = "";
+                                    var span_style = "";
+                                    var span_id = "bkm-title-attr-span-" + i;
+                                    var type = "";
+                                    if(t.hasAttribute("title")) {
+                                        type = "title-yes";
+                                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
+                                    } else {
+                                        type = "title-no";
+                                        span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                                    }
+                                    if(type === "title-yes") {
+                                        var title_vl = t.getAttribute("title");
+                                        span_html = (title_vl === "") ? "title属性有:(空)" : "title属性有: " + title_vl;
+                                    } else if(type === "title-no") {
+                                        span_html = "title属性なし";
+                                    }
+                                    var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                                    t.insertAdjacentHTML("beforebegin", span);
+                                }
+                            } else if(tag_name === "textarea" || tag_name === "select") {
+                                var span_html = "";
+                                var span_style = "";
+                                var span_id = "bkm-title-attr-span-" + i;
+                                var type = "";
+                                if(t.hasAttribute("title")) {
+                                    type = "title-yes";
+                                    span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
+                                } else {
+                                    type = "title-no";
+                                    span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
+                                }
+                                if(type === "title-yes") {
+                                    var title_vl = t.getAttribute("title");
+                                    span_html = (title_vl === "") ? "title属性有:(空)" : "title属性有: " + title_vl;
+                                } else if(type === "title-no") {
+                                    span_html = "title属性なし";
+                                }
+                                var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                                t.insertAdjacentHTML("beforebegin", span);
+                            } else {
+                                var span_html = "";
+                                var span_style = "";
+                                var span_id = "bkm-title-attr-span-" + i;
+                                if(t.hasAttribute("title")) {
+                                    var title_vl = t.getAttribute("title");
+                                    span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
+                                    span_html = (title_vl === "") ? "title属性有:(空)" : "title属性有: " + title_vl;
+                                    var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                                    t.insertAdjacentHTML("beforebegin", span);
+                                }
+                            }
+                        }
+                    }
+                }
+                for(var i=0; i<idx; i++) {
+                    in_funcs[i]();
+                }
+            }
+            tag_label_label();
+            tag_label_input();
+            tag_label_textarea();
+            tag_label_select();
+            tag_title_attr();
         `;
     }
 

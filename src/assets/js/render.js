@@ -50,6 +50,18 @@ function initWebview() {
             }
         },
         {
+            label: "別ウィンドウで開く",
+            click: () => {
+                var crWindow = BrowserWindow.getFocusedWindow();
+                var crurl = webview.src;
+                crWindow.webContents.executeJavaScript(`
+                    require("electron").ipcRenderer.send("view-new-window-click",
+                        JSON.parse(JSON.stringify({winurl: "${crurl}"}))
+                    );
+                `);
+            }
+        },
+        {
             label: "再読み込み",
             click: () => {
                 webview.reload();
@@ -235,19 +247,19 @@ function infoButton() {
     }
 }
 
-function browseButton() {
-    document.querySelector("#browse").onclick = function() {
+function langButton() {
+    document.querySelector("#langcheck").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
-        require("electron").ipcRenderer.send("browseButton-click", {
+        require("electron").ipcRenderer.send("langButton-click", {
             winurl: crurl
         });
     };
 }
 
-function langButton() {
-    document.querySelector("#langcheck").onclick = function() {
+function labelAndTitleButton() {
+    document.querySelector("#label-and-title-check").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
-        require("electron").ipcRenderer.send("langButton-click", {
+        require("electron").ipcRenderer.send("labelAndTitleButton-click", {
             winurl: crurl
         });
     };

@@ -160,18 +160,6 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("browseButton-click", (event, arg) => {
-        if(brWindow === null) {
-            brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
-            brWindow.on("closed", () => { brWindow = null });
-            brWindow.loadURL(arg.winurl);
-        } else {
-            let nowurl = brWindow.webContents.getURL();
-            if(nowurl != arg.winurl) {
-                brWindow.loadURL(arg.winurl);
-            }
-        }
-    });
     ipcMain.on("altButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -214,7 +202,6 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("target-reply", (event, arg) => {});
     ipcMain.on("structButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -236,11 +223,6 @@ app.on("ready", () => {
             }
         }
     });
-    ipcMain.on("view-source-click", (event, arg) => {
-        let srcWindow = new BrowserWindow({width: 1024, height: 768});
-        srcWindow.on("closed", () => {srcWindow = null});
-        srcWindow.loadURL("view-source:" + arg.winurl);
-    });
     ipcMain.on("langButton-click", (event, arg) => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -259,6 +241,45 @@ app.on("ready", () => {
                 });
             } else {
                 presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
+            }
+        }
+    });
+    ipcMain.on("labelAndTitleButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.loadURL(arg.winurl);
+            presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
+            });
+        } else {
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
+            }
+        }
+    });
+
+    ipcMain.on("view-source-click", (event, arg) => {
+        let srcWindow = new BrowserWindow({width: 1024, height: 768});
+        srcWindow.on("closed", () => {srcWindow = null});
+        srcWindow.loadURL("view-source:" + arg.winurl);
+    });
+    ipcMain.on("view-new-window-click", (event, arg) => {
+        if(brWindow === null) {
+            brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            brWindow.on("closed", () => { brWindow = null });
+            brWindow.loadURL(arg.winurl);
+        } else {
+            let nowurl = brWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                brWindow.loadURL(arg.winurl);
             }
         }
     });

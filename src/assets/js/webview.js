@@ -16,9 +16,9 @@ window.onload = function() {
     targetCheckButton();
     structCheckButton();
     infoButton();
-    browseButton();
     refetchButton();
     langButton();
+    labelAndTitleButton();
 };
 
 function doLayout() {
