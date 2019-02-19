@@ -249,7 +249,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
-            presvWindow.webContents.toggleDevTools();
+            //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
             });
