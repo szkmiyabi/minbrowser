@@ -78,6 +78,16 @@ function initWebview() {
             click: () => {
                 webview.setZoomFactor(1.0);
             }
+        },
+        {
+            label: "このページをPDFで保存する",
+            click: () => {
+                let webview = document.querySelector("webview");
+                let crurl = webview.src;
+                require("electron").ipcRenderer.send("save-pdf-click", {
+                    winurl: crurl
+                });
+            }
         }
     ]);
     webview.addEventListener("context-menu", () => {
@@ -369,3 +379,6 @@ function validate_urlArr() {
     return err_flg;
 }
  
+
+
+

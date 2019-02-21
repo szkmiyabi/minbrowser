@@ -283,6 +283,39 @@ app.on("ready", () => {
             }
         }
     });
+    ipcMain.on("save-pdf-click", (event, arg) => {
+        let pdfWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+        pdfWindow.on("closed", () => {pdfWindow = null});
+        pdfWindow.loadURL(arg.winurl);
+        pdfWindow.webContents.on("did-finish-load", () => {
+            require("electron").dialog.showSaveDialog(
+                pdfWindow,
+                {
+                    properties: ["openFile"],
+                    filters: [{
+                        name: "Documents",
+                        extensions: ["pdf"]
+                    }]
+                },
+                (fileName) => {
+                    if(fileName) {
+                        pdfWindow.webContents.printToPDF({}, (error, data) => {
+                            fs.writeFile(fileName, data, (error) => {
+                                let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページをPDFに保存しました!"};
+                                let fail_msg_opt = {type:"warning",buttons:["OK"], message:"", detail:"保存に失敗しました!"};
+                                if(error) {
+                                    require("electron").dialog.showMessageBox(pdfWindow, fail_msg_opt);
+                                } else {
+                                    require("electron").dialog.showMessageBox(pdfWindow, ok_msg_opt);
+                                    pdfWindow.destroy();
+                                }
+                            })
+                        })
+                    }
+                }
+            );
+        });
+    });
 
 });
 
