@@ -19,6 +19,7 @@ window.onload = function() {
     refetchButton();
     langButton();
     labelAndTitleButton();
+    documentLinkButton();
 };
 
 function doLayout() {

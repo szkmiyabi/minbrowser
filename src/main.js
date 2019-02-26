@@ -5,6 +5,7 @@ const fs = require("fs");
 const { Menu } = require("electron");
 const { ipcMain } = require("electron");
 const { clipboard } = require("electron");
+const PDFWindow = require("electron-pdf-window");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
@@ -144,6 +145,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             presvWindow.webContents.on("did-finish-load", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
@@ -164,6 +166,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -185,6 +188,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -206,6 +210,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -227,6 +232,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -248,6 +254,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -265,6 +272,28 @@ app.on("ready", () => {
             }
         }
     });
+    ipcMain.on("documentLinkButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            presvWindow.on("closed", () => { presvWindow = null});
+            PDFWindow.addSupport(presvWindow);
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.document_link());
+            });
+        } else {
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.webContents.on("did-finish-load", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.document_link());
+                });
+            } else {
+                presvWindow.webContents.executeJavaScript(presvUtil.document_link());
+            }
+        }
+    });
 
     ipcMain.on("view-source-click", (event, arg) => {
         let srcWindow = new BrowserWindow({width: 1024, height: 768});
@@ -275,6 +304,7 @@ app.on("ready", () => {
         if(brWindow === null) {
             brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             brWindow.on("closed", () => { brWindow = null });
+            PDFWindow.addSupport(brWindow);
             brWindow.loadURL(arg.winurl);
         } else {
             let nowurl = brWindow.webContents.getURL();
@@ -284,12 +314,12 @@ app.on("ready", () => {
         }
     });
     ipcMain.on("save-pdf-click", (event, arg) => {
-        let pdfWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
-        pdfWindow.on("closed", () => {pdfWindow = null});
-        pdfWindow.loadURL(arg.winurl);
-        pdfWindow.webContents.on("did-finish-load", () => {
+        let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+        pdfSaveWindow.on("closed", () => {pdfSaveWindow = null});
+        pdfSaveWindow.loadURL(arg.winurl);
+        pdfSaveWindow.webContents.on("did-finish-load", () => {
             require("electron").dialog.showSaveDialog(
-                pdfWindow,
+                pdfSaveWindow,
                 {
                     properties: ["openFile"],
                     filters: [{
@@ -299,15 +329,15 @@ app.on("ready", () => {
                 },
                 (fileName) => {
                     if(fileName) {
-                        pdfWindow.webContents.printToPDF({}, (error, data) => {
+                        pdfSaveWindow.webContents.printToPDF({}, (error, data) => {
                             fs.writeFile(fileName, data, (error) => {
                                 let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページをPDFに保存しました!"};
                                 let fail_msg_opt = {type:"warning",buttons:["OK"], message:"", detail:"保存に失敗しました!"};
                                 if(error) {
-                                    require("electron").dialog.showMessageBox(pdfWindow, fail_msg_opt);
+                                    require("electron").dialog.showMessageBox(pdfSaveWindow, fail_msg_opt);
                                 } else {
-                                    require("electron").dialog.showMessageBox(pdfWindow, ok_msg_opt);
-                                    pdfWindow.destroy();
+                                    require("electron").dialog.showMessageBox(pdfSaveWindow, ok_msg_opt);
+                                    pdfSaveWindow.destroy();
                                 }
                             })
                         })

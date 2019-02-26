@@ -603,4 +603,54 @@ module.exports = class presvUtil {
         `;
     }
 
+    static document_link() {
+        return `
+            var regx_arr = new Array();
+            var exts = ["pdf", "doc", "docx", "xls", "xlsx", "jtd", "ppt", "pptx", "csv"];
+            for(var i=0; i<exts.length; i++) {
+                var ext = exts[i];
+                var in_regx = new RegExp("(.*\/*)(.+?\.)(" + ext + ")");
+                regx_arr.push(in_regx);
+            }
+            var ats = document.getElementsByTagName("a");
+            for(var i=0; i<ats.length; i++) {
+                var atag = ats.item(i);
+                if(atag.hasAttribute("href")) {
+                    href_vl = atag.getAttribute("href");
+                    if(is_doc_link(regx_arr, href_vl)) {
+                        var cr_ext = get_document_type(regx_arr, href_vl);
+                        var span_id = "bkm-isdocument-span-" + i;
+                        var span_html = "Fileリンク: " + cr_ext;
+                        var span_css = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C000C0;border-radius:5px;";
+                        var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
+                        atag.insertAdjacentHTML("beforebegin", span);
+                    }
+                }
+            }
+            function is_doc_link(arr, str) {
+                var flag = false;
+                for(var i=0; i<arr.length; i++) {
+                    var aval = arr[i];
+                    if(aval.test(str)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                return flag;
+            }
+            function get_document_type(arr, str) {
+                var ret = "";
+                for(var i=0; i<arr.length; i++) {
+                    var aval = arr[i];
+                    if(aval.test(str)) {
+                        ret = str.match(aval)[3];
+                        break;
+                    }
+                }
+                ret = ret.toUpperCase();
+                return ret;
+            }
+        `;
+    }
+
 }

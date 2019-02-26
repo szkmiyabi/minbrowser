@@ -2,6 +2,7 @@ const { remote } = require("electron");
 const { BrowserWindow, dialog, shell } = remote;
 const fs = require("fs");
 const readline = require("readline");
+const PDFWindow = require("electron-pdf-window");
 
 let urlArr = [];
 let urlArrIdx = 0;
@@ -19,13 +20,34 @@ function getControlsHeight() {
     }
 }
 
+function is_pdf_link(str) {
+    str = str.toLowerCase();
+    let pt = new RegExp(/.*\/*.+?\.pdf/);
+    if(pt.test(str)) return true;
+    else return false;
+}
+
 function initWebview() {
     var webview = document.querySelector("#webview");
     webview.addEventListener("dom-ready", updateUrlText);
     webview.addEventListener("new-window", (e) => {
         const protocol = require("url").parse(e.url).protocol;
         if(protocol === "http:" || protocol === "https:") {
+            if(is_pdf_link(e.url)) {
+                let win = new BrowserWindow({width: 1024, height: 768});
+                PDFWindow.addSupport(win);
+                win.loadURL(e.url);
+            } else {
+                let win = new BrowserWindow({width: 1024, height: 768, webPreferences: {nodeIntegration: false}});
+                win.loadURL(e.url);
+            }
+        }
+    });
+    webview.addEventListener("will-navigate", (e) => {
+        if(is_pdf_link(e.url)) {
+            webview.stop();
             let win = new BrowserWindow({width: 1024, height: 768});
+            PDFWindow.addSupport(win);
             win.loadURL(e.url);
         }
     });
@@ -270,6 +292,15 @@ function labelAndTitleButton() {
     document.querySelector("#label-and-title-check").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
         require("electron").ipcRenderer.send("labelAndTitleButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
+function documentLinkButton() {
+    document.querySelector("#documentlink").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("documentLinkButton-click", {
             winurl: crurl
         });
     };
