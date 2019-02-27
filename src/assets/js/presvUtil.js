@@ -624,8 +624,20 @@ module.exports = class presvUtil {
                         var span_css = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C000C0;border-radius:5px;";
                         var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
                         atag.insertAdjacentHTML("beforebegin", span);
+                    } else if(is_premium_pdf_link(href_vl)) {
+                        var span_id = "bkm-isdocument-span-" + i;
+                        var span_html = "Fileリンクの可能性有: PDF";
+                        var span_css = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C000C0;border-radius:5px;";
+                        var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
+                        atag.insertAdjacentHTML("beforebegin", span);
                     }
                 }
+            }
+            function is_premium_pdf_link(str) {
+                str = str.toLowerCase();
+                var pt = new RegExp(/(\.pdf#|\.pdf\?)/);
+                if(pt.test(str)) return true;
+                else return false;
             }
             function is_doc_link(arr, str) {
                 var flag = false;
