@@ -2,7 +2,6 @@ const { remote } = require("electron");
 const { BrowserWindow, dialog, shell } = remote;
 const fs = require("fs");
 const readline = require("readline");
-const PDFWindow = require("electron-pdf-window");
 
 let urlArr = [];
 let urlArrIdx = 0;
@@ -34,9 +33,8 @@ function initWebview() {
         const protocol = require("url").parse(e.url).protocol;
         if(protocol === "http:" || protocol === "https:") {
             if(is_pdf_link(e.url)) {
-                let win = new BrowserWindow({width: 1024, height: 768});
-                PDFWindow.addSupport(win);
-                win.loadURL(e.url);
+                webview.stop();
+                shell.openExternal(e.url);
             } else {
                 let win = new BrowserWindow({width: 1024, height: 768, webPreferences: {nodeIntegration: false}});
                 win.loadURL(e.url);
@@ -46,9 +44,7 @@ function initWebview() {
     webview.addEventListener("will-navigate", (e) => {
         if(is_pdf_link(e.url)) {
             webview.stop();
-            let win = new BrowserWindow({width: 1024, height: 768});
-            PDFWindow.addSupport(win);
-            win.loadURL(e.url);
+            shell.openExternal(e.url);
         }
     });
     const Menu = require("electron").remote.Menu;
@@ -72,7 +68,7 @@ function initWebview() {
             }
         },
         {
-            label: "別ウィンドウで開く",
+            label: "既定のブラウザで開く",
             click: () => {
                 var crWindow = BrowserWindow.getFocusedWindow();
                 var crurl = webview.src;

@@ -5,7 +5,7 @@ const fs = require("fs");
 const { Menu } = require("electron");
 const { ipcMain } = require("electron");
 const { clipboard } = require("electron");
-const PDFWindow = require("electron-pdf-window");
+const { shell } = require("electron");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
@@ -145,7 +145,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             presvWindow.webContents.on("did-finish-load", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
@@ -166,7 +165,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -188,7 +186,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -210,7 +207,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -232,7 +228,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -254,7 +249,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -276,7 +270,6 @@ app.on("ready", () => {
         if(presvWindow === null) {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
-            PDFWindow.addSupport(presvWindow);
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("did-finish-load", () => {
@@ -301,17 +294,17 @@ app.on("ready", () => {
         srcWindow.loadURL("view-source:" + arg.winurl);
     });
     ipcMain.on("view-new-window-click", (event, arg) => {
-        if(brWindow === null) {
+        shell.openExternal(arg.winurl);
+        /*if(brWindow === null) {
             brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             brWindow.on("closed", () => { brWindow = null });
-            PDFWindow.addSupport(brWindow);
             brWindow.loadURL(arg.winurl);
         } else {
             let nowurl = brWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 brWindow.loadURL(arg.winurl);
             }
-        }
+        }*/
     });
     ipcMain.on("save-pdf-click", (event, arg) => {
         let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});

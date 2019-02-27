@@ -609,7 +609,7 @@ module.exports = class presvUtil {
             var exts = ["pdf", "doc", "docx", "xls", "xlsx", "jtd", "ppt", "pptx", "csv"];
             for(var i=0; i<exts.length; i++) {
                 var ext = exts[i];
-                var in_regx = new RegExp("(.*\/*)(.+?\.)(" + ext + ")");
+                var in_regx = new RegExp("(.*\/*)(.+\.)(" + ext + ")$");
                 regx_arr.push(in_regx);
             }
             var ats = document.getElementsByTagName("a");
