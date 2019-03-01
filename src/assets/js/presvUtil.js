@@ -361,6 +361,7 @@ module.exports = class presvUtil {
             var type = "";
             for(var i=0; i<alltags.length; i++) {
                 var tag = alltags.item(i);
+                var tag_name = tag.tagName.toLowerCase();
                 if(tag.hasAttribute("lang") || tag.hasAttribute("xml:lang")) {
                     if(tag.hasAttribute("lang") && tag.hasAttribute("xml:lang")) {
                         type = "all";
@@ -393,7 +394,11 @@ module.exports = class presvUtil {
                     span_html = '&lt;' + tag.tagName.toLowerCase() + '&gt;要素 , ' + span_html;
                     var span_css = "padding-right:5px;color:#fff;font-size:13px;padding:1px;background:#008000;border-radius:5px;";
                     var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
-                    tag.insertAdjacentHTML("afterbegin", span);
+                    if(tag_name === "img") {
+                        tag.insertAdjacentHTML("afterend", span);
+                    } else {
+                        tag.insertAdjacentHTML("afterbegin", span);
+                    }
                 }
             }
         `;
