@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron src",
-    "build-windows": "electron-packager src minbrowser --platform=win32 --arch=all --overwrite --electron-version=4.0.5 --icon=src/assets/icons/appicon.ico",
+    "build-windows": "electron-packager src minbrowser --platform=win32 --arch=all --overwrite --electron-version=4.0.6 --icon=src/assets/icons/appicon.ico",
     "build-macOS": "electron-packager src minbrowser --platform=darwin --arch=x64 --overwrite --electron-version=4.0.6 --icon=src/assets/icons/appicon.icns"
   },
   "keywords": [],
