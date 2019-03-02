@@ -670,4 +670,47 @@ module.exports = class presvUtil {
         `;
     }
 
+    static form_insert_testdata(str) {
+        return `
+            var static_word = "${str}";
+            var element = document.activeElement;
+            if(element.tagName.toLowerCase() === "input") {
+                var type = "";
+                if(element.hasAttribute("type")) {
+                    type = element.getAttribute("type");
+                } else {
+                    type = "text";
+                }
+                if(type === "text") {
+                    element.value = static_word;
+                }
+            } else if(element.tagName.toLowerCase() === "textarea") {
+                element.value = static_word;
+            }
+        `;  
+    }
+
+    static form_insert_bigtext() {
+        return `
+            var static_word = "";
+            for(var i=0; i<201; i++) {
+                static_word += "あ";
+            }
+            var element = document.activeElement;
+            if(element.tagName.toLowerCase() === "input") {
+                var type = "";
+                if(element.hasAttribute("type")) {
+                    type = element.getAttribute("type");
+                } else {
+                    type = "text";
+                }
+                if(type === "text") {
+                    element.value = static_word;
+                }
+            } else if(element.tagName.toLowerCase() === "textarea") {
+                element.value = static_word;
+            }
+        `;
+    }
+
 }

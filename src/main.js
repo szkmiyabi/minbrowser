@@ -12,6 +12,7 @@ let mainWindow;
 let w3cWindow = null;
 let presvWindow = null;
 let brWindow = null;
+let frmWindow = null;
 
 const tmenu = Menu.buildFromTemplate([
     {
@@ -85,19 +86,68 @@ const rmenu = Menu.buildFromTemplate([
         }
     },
     {
-        label: "ズーム200％にする",
-        click: () => {
-            let crWindow = BrowserWindow.getFocusedWindow();
-            crWindow.webContents.setZoomFactor(2.0);
-        }
+        label: "フォーム調査",
+        submenu: [
+            {
+                label: "半角文字を注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "ABCDEFGabcdefg_9999-12-31"
+                    ));
+                }
+            },
+            {
+                label: "全角文字を注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "あいうえおＡＩＵＥＯａｉｕｅｏ９９９９年１２月３１日"
+                    ));
+                }
+            },
+            {
+                label: "半角メールアドレスを注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "hoge@sample.net"
+                    ));
+                }
+            },
+            {
+                label: "全角メールアドレスを注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "ｈｏｇｅ＠ｓａｍｐｌｅ．ｃｏｍ"
+                    ));
+                }
+            },
+            {
+                label: "文字を大量注入(200文字)",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_bigtext());
+                } 
+            }
+        ]
     },
     {
-        label: "ズーム100％に戻す",
-        click: () => {
-            let crWindow = BrowserWindow.getFocusedWindow();
-            crWindow.webContents.setZoomFactor(1.0);
-        }
-    }
+        label: "ズーム",
+        submenu: [
+            {
+                label: "200％にする",
+                click: () => {
+                    let crWindow = BrowserWindow.getFocusedWindow();
+                    crWindow.webContents.setZoomFactor(2.0);
+                }
+            },
+            {
+                label: "100％に戻す",
+                click: () => {
+                    let crWindow = BrowserWindow.getFocusedWindow();
+                    crWindow.webContents.setZoomFactor(1.0);
+                }
+            }
+        ]
+    },
+
 ]);
 
 function createWindow() {
@@ -295,16 +345,6 @@ app.on("ready", () => {
     });
     ipcMain.on("view-new-window-click", (event, arg) => {
         shell.openExternal(arg.winurl);
-        /*if(brWindow === null) {
-            brWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
-            brWindow.on("closed", () => { brWindow = null });
-            brWindow.loadURL(arg.winurl);
-        } else {
-            let nowurl = brWindow.webContents.getURL();
-            if(nowurl != arg.winurl) {
-                brWindow.loadURL(arg.winurl);
-            }
-        }*/
     });
     ipcMain.on("save-pdf-click", (event, arg) => {
         let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
@@ -338,6 +378,19 @@ app.on("ready", () => {
                 }
             );
         });
+    });
+    ipcMain.on("operation-new-window-click", (event, arg) => {
+        if(presvWindow === null) {
+            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.loadURL(arg.winurl);
+            //presvWindow.webContents.toggleDevTools();
+        } else {
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.loadURL(arg.winurl);
+            }
+        }
     });
 
 });

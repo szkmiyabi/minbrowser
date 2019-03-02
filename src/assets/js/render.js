@@ -80,22 +80,39 @@ function initWebview() {
             }
         },
         {
+            label: "動作検証ウィンドウを開く",
+            click: () => {
+                var crWindow = BrowserWindow.getFocusedWindow();
+                var crurl = webview.src;
+                crWindow.webContents.executeJavaScript(`
+                    require("electron").ipcRenderer.send("operation-new-window-click",
+                        JSON.parse(JSON.stringify({winurl: "${crurl}"}))
+                    );
+                `);
+            }
+        },
+        {
             label: "再読み込み",
             click: () => {
                 webview.reload();
             }
         },
         {
-            label: "ズーム200％にする",
-            click: () => {
-                webview.setZoomFactor(2.0);
-            }
-        },
-        {
-            label: "ズーム100％に戻す",
-            click: () => {
-                webview.setZoomFactor(1.0);
-            }
+            label: "ズーム",
+            submenu: [
+                {
+                    label: "200％にする",
+                    click: () => {
+                        webview.setZoomFactor(2.0);
+                    }
+                },
+                {
+                    label: "100％に戻す",
+                    click: () => {
+                        webview.setZoomFactor(1.0);
+                    }
+                }
+            ]
         },
         {
             label: "このページをPDFで保存する",
