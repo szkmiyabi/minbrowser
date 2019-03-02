@@ -105,7 +105,7 @@ const rmenu = Menu.buildFromTemplate([
                 }
             },
             {
-                label: "半角メールアドレスを注入",
+                label: "メールアドレス(半角)を注入",
                 click: () => {
                     BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
                         "hoge@sample.net"
@@ -113,10 +113,42 @@ const rmenu = Menu.buildFromTemplate([
                 }
             },
             {
-                label: "全角メールアドレスを注入",
+                label: "メールアドレス(全角)を注入",
                 click: () => {
                     BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
                         "ｈｏｇｅ＠ｓａｍｐｌｅ．ｃｏｍ"
+                    ));
+                }
+            },
+            {
+                label: "電話番号(半角)を注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "090-0799-0000"
+                    ));
+                }
+            },
+            {
+                label: "電話番号(全角)を注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "０９０ー０７７９ー００００"
+                    ));
+                }
+            },
+            {
+                label: "住所を注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "邪馬台県架空野市なでしこ町12ｰ1"
+                    ));
+                }
+            },
+            {
+                label: "氏名/ふりがなを注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "阿波　太郎/あわ　たろう"
                     ));
                 }
             },
