@@ -24,3 +24,4 @@ $RECYCLE.BIN/
 node_modules/
 minbrowser-win32-ia32/
 minbrowser-win32-x64/
+minbrowser-darwin-x64/
