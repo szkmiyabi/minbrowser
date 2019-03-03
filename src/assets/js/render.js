@@ -7,6 +7,8 @@ let urlArr = [];
 let urlArrIdx = 0;
 let urlFileOpened = false;
 
+let registPageDatas = [];
+
 let homeUrl = "https://www.google.co.jp";
 const w3c_urlbase = "https://validator.w3.org/check?ss=1&uri=";
 
@@ -115,6 +117,50 @@ function initWebview() {
             ]
         },
         {
+            label: "ページ情報",
+            submenu: [
+                {
+                    label: "現在のURL＋ページタイトル登録",
+                    click: () => {
+                        let crurl = webview.src;
+                        let crtitle = "";
+                        crtitle = webview.getTitle();
+                        let add_vl = crurl + "\t" + crtitle;
+                        if(isExistsPageDatas(crurl)) {
+                            alert("既に登録されているURLです!");
+                            return;
+                        }
+                        registPageDatas.push(add_vl);
+                    }
+                },
+                {
+                    label: "現在のPID＋URL＋コメント登録",
+                    click: () => {
+                        let cmb = document.querySelector("#urlCombo");
+                        let crpid = cmb.getElementsByTagName("option").item(cmb.selectedIndex).innerText;
+                        let crurl = webview.src;
+                        let comment = prompt("コメントを入力", "");
+                        if(isExistsPageID(crurl)) {
+                            let idx = getPageDatasMatchRow();
+                            let old_vl = registPageDatas[idx];
+                            let old_vl_cols = old_vl.split(/<bkmk:tab>/);
+                            let new_vl = old_vl_cols[0] + "<bkmk:tab>" + old_vl_cols[1] + "<bkmk:tab>" + old_vl_cols[2] + "<bkmk:br>" + comment;
+                            registPageDatas[idx] = new_vl;
+                        } else {
+                            let new_vl = crpid + "<bkmk:tab>" + crurl + "<bkmk:tab>" + comment;
+                            registPageDatas.push(new_vl);
+                        }
+                    }
+                },
+                {
+                    label: "データ保存",
+                    click: () => {
+                        savePageDatas();
+                    }
+                }
+            ]
+        },
+        {
             label: "このページをPDFで保存する",
             click: () => {
                 let webview = document.querySelector("webview");
@@ -124,6 +170,7 @@ function initWebview() {
                 });
             }
         }
+    
     ]);
     webview.addEventListener("context-menu", () => {
         webviewRightMenu.popup();
@@ -421,6 +468,74 @@ function validate_urlArr() {
         err_flg = true;
     }
     return err_flg;
+}
+
+function isExistsPageID() {
+    let cmb = document.querySelector("#urlCombo");
+    let crpid = cmb.getElementsByTagName("option").item(cmb.selectedIndex).innerText;
+    for(var i=0; i<registPageDatas.length; i++) {
+        let row = registPageDatas[i];
+        if(new RegExp("^" + crpid).test(row)) return true;
+    }
+    return false;
+}
+
+function getPageDatasMatchRow() {
+    let idx = 0;
+    let cmb = document.querySelector("#urlCombo");
+    let crpid = cmb.getElementsByTagName("option").item(cmb.selectedIndex).innerText;
+    for(var i=0; i<registPageDatas.length; i++) {
+        let row = registPageDatas[i];
+        if(new RegExp("^" + crpid).test(row)){
+            idx = i;
+            break;
+        }
+    }
+    return idx;
+}
+
+function isExistsPageDatas(url) {
+    for(var i=0; i<registPageDatas.length; i++) {
+        let row = registPageDatas[i];
+        row = row.replace(/\t/g, "");
+        if(new RegExp(url).test(row)) return true;
+    }
+    return false;
+}
+
+function savePageDatas() {
+    if(registPageDatas.length < 1) {
+        alert("ページ情報が1件も登録されていません!");
+        return;
+    }
+    let content = "";
+    for(var i=0; i<registPageDatas.length; i++) {
+        content += registPageDatas[i].toString() + "\r\n";
+    }
+    content = content.replace(/<bkmk:tab>/g, "\r\n");
+    content = content.replace(/<bkmk:br>/g, "\r\n");
+    const win = BrowserWindow.getFocusedWindow();
+    dialog.showSaveDialog(
+        win,
+        {
+            properties: ["openFile"],
+            filters: [{
+                name: "Documents",
+                extensions: ["txt"]
+            }]
+        },
+        (fileName) => {
+            if(fileName) {
+                fs.writeFile(fileName, content, (err) => {
+                    if(err) {
+                        alert("保存に失敗しました!");
+                    } else {
+                        alert("保存に成功しました!")
+                    }
+                })
+            }
+        }
+    );
 }
  
 

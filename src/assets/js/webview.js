@@ -22,6 +22,10 @@ window.onload = function() {
     documentLinkButton();
 };
 
+window.prompt = function(title, val){
+  return require("electron").ipcRenderer.sendSync('prompt', {title, val})
+};
+
 function doLayout() {
     var webview = document.querySelector("webview");
     var windowWidth = document.documentElement.clientWidth;
