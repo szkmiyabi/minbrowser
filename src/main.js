@@ -397,7 +397,11 @@ app.on("ready", () => {
                 },
                 (fileName) => {
                     if(fileName) {
-                        pdfSaveWindow.webContents.printToPDF({}, (error, data) => {
+                        pdfSaveWindow.webContents.printToPDF({
+                            marginsType: 2,
+                            pageSize: "A4",
+                            printBackground: true
+                        }, (error, data) => {
                             fs.writeFile(fileName, data, (error) => {
                                 let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページをPDFに保存しました!"};
                                 let fail_msg_opt = {type:"warning",buttons:["OK"], message:"", detail:"保存に失敗しました!"};
