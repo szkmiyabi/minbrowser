@@ -179,6 +179,41 @@ const rmenu = Menu.buildFromTemplate([
             }
         ]
     },
+    {
+        label: "このページをPDFで保存する",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            require("electron").dialog.showSaveDialog(
+                crWindow,
+                {
+                    properties: ["openFile"],
+                    filters: [{
+                        name: "Documents",
+                        extensions: ["pdf"]
+                    }]
+                },
+                (fileName) => {
+                    if(fileName) {
+                        crWindow.webContents.printToPDF({
+                            marginsType: 2,
+                            pageSize: "A4",
+                            printBackground: true
+                        }, (error, data) => {
+                            fs.writeFile(fileName, data, (error) => {
+                                let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページをPDFに保存しました!"};
+                                let fail_msg_opt = {type:"warning", buttons:["OK"], message:"", detail:"保存に失敗しました!"};
+                                if(error) {
+                                    require("electron").dialog.showMessageBox(crWindow, fail_msg_opt);
+                                } else {
+                                    require("electron").dialog.showMessageBox(crWindow, ok_msg_opt);
+                                }
+                            })
+                        })
+                    }
+                }
+            )
+        }
+    }
 
 ]);
 
