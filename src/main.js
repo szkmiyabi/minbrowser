@@ -14,6 +14,9 @@ let presvWindow = null;
 let brWindow = null;
 let frmWindow = null;
 
+let authWindow;
+let loginCallBack;
+
 const tmenu = Menu.buildFromTemplate([
     {
         label: "Edit",
@@ -497,7 +500,43 @@ app.on("ready", () => {
         if (arg === ""){ arg = null }
         promptResponse = arg;
     });
+    ipcMain.on("authorization", (event, arg) => {
+        loginCallBack(arg.username, arg.password);
+        authWindow.close();
+    });
 
+});
+
+app.on("login", (event, webContents, request, authInfo, callback) => {
+    event.preventDefault();
+    let win = BrowserWindow.getFocusedWindow();
+    authWindow = new BrowserWindow({
+        width: 300,
+        height: 200,
+        parent: win,
+        modal: true,
+        frame: false
+    });
+    const authHtml = '<html lang="ja"><head><meta charset="utf-8">\
+    <style>body{text-align:center;}input{margin:5px}button{margin-top:10px;border-radius:5px;}</style>\
+    </head><body><h3>ログイン</h3>\
+    <label>ユーザ名</label>\
+    <input type="text" id="username" class="input"><br>\
+    <label>パスワード</label>\
+    <input type="password" id="password" class="input"><br>\
+    <button id="auth" onclick="submit()">ログイン</button>\
+    <button onclick="window.close()">キャンセル</button>\
+    <script type="text/javascript">\
+    const { ipcRenderer } = require("electron");\
+    function submit() {\
+      const username = document.querySelector("#username").value;\
+      const password = document.querySelector("#password").value;\
+      ipcRenderer.send("authorization", { username, password });\
+    }\
+    </script>\
+    </body></html>';
+    authWindow.loadURL('data:text/html,' + authHtml);
+    loginCallBack = callback;
 });
 
 app.on("browser-window-created", (event, win) => {
