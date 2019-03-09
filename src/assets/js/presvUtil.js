@@ -611,7 +611,7 @@ module.exports = class presvUtil {
     static document_link() {
         return `
             var regx_arr = new Array();
-            var exts = ["pdf", "doc", "docx", "xls", "xlsx", "jtd", "ppt", "pptx", "csv"];
+            var exts = ["pdf", "doc", "docx", "xls", "xlsx", "jtd", "ppt", "pptx", "csv", "odt", "ods", "odp", "zip"];
             for(var i=0; i<exts.length; i++) {
                 var ext = exts[i];
                 var in_regx = new RegExp("(.*\/*)(.+\.)(" + ext + ")$");

@@ -239,14 +239,14 @@ app.on("ready", () => {
             w3cWindow.on("closed", () => {w3cWindow = null});
             w3cWindow.loadURL(arg.winurl);
             //w3cWindow.webContents.toggleDevTools();
-            w3cWindow.webContents.on("did-finish-load", () => {
+            w3cWindow.webContents.on("dom-ready", () => {
                 w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
             });
         } else {
             let nowurl = w3cWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 w3cWindow.loadURL(arg.winurl);
-                w3cWindow.webContents.on("did-finish-load", () => {
+                w3cWindow.webContents.on("dom-ready", () => {
                     w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
                 });
             } else {
@@ -269,14 +269,14 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
                 });
             } else {            
@@ -290,14 +290,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
                 });
             } else {
@@ -311,14 +311,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
                 });
             } else {
@@ -332,14 +332,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
                 });
             } else {
@@ -353,14 +353,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
                 });
             } else {
@@ -374,14 +374,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
                 });
             } else {
@@ -395,14 +395,14 @@ app.on("ready", () => {
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
             //presvWindow.webContents.toggleDevTools();
-            presvWindow.webContents.on("did-finish-load", () => {
+            presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.document_link());
             });
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
-                presvWindow.webContents.on("did-finish-load", () => {
+                presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.document_link());
                 });
             } else {
@@ -423,7 +423,7 @@ app.on("ready", () => {
         let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
         pdfSaveWindow.on("closed", () => {pdfSaveWindow = null});
         pdfSaveWindow.loadURL(arg.winurl);
-        pdfSaveWindow.webContents.on("did-finish-load", () => {
+        pdfSaveWindow.webContents.on("dom-ready", () => {
             require("electron").dialog.showSaveDialog(
                 pdfSaveWindow,
                 {
