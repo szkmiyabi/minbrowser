@@ -216,38 +216,66 @@ function enterUrlText() {
     });
 }
 
+function devToolsKeyCommand() {
+    Mousetrap.bind(["alt i","command i"], () => {
+        webview.openDevTools();
+    });
+}
+
+function _forceBlur() {
+    if(document.activeElement) {
+        document.activeElement.blur();
+    }
+}
+
 function nextButton() {
     document.querySelector("#next").onclick = function() {
-        var crIdx = urlArrIdx;
-        crIdx++;
-        if(crIdx == urlArr.length) {
-            alert("これ以上進めません");
-            return;
-        }
-        urlArrIdx = crIdx;
-        var combo = document.querySelector("#urlCombo");
-        combo.selectedIndex = crIdx;
-        event = document.createEvent("HTMLEvents");
-        event.initEvent("change", true, false);
-        document.querySelector("#urlCombo").dispatchEvent(event);
+        _nextButtonCommand();
     };
+    Mousetrap.bind(["alt a","command a"], () => {
+        _forceBlur();
+        _nextButtonCommand();
+    });
+}
+
+function _nextButtonCommand() {
+    var crIdx = urlArrIdx;
+    crIdx++;
+    if(crIdx == urlArr.length) {
+        alert("これ以上進めません");
+        return;
+    }
+    urlArrIdx = crIdx;
+    var combo = document.querySelector("#urlCombo");
+    combo.selectedIndex = crIdx;
+    event = document.createEvent("HTMLEvents");
+    event.initEvent("change", true, false);
+    document.querySelector("#urlCombo").dispatchEvent(event);
 }
 
 function prevButton() {
     document.querySelector("#prev").onclick = function() {
-        var crIdx = urlArrIdx;
-        crIdx--;
-        if(crIdx < 0) {
-            alert("これ以上戻れません");
-            return;
-        }
-        urlArrIdx = crIdx;
-        var combo = document.querySelector("#urlCombo");
-        combo.selectedIndex = crIdx;
-        event = document.createEvent("HTMLEvents");
-        event.initEvent("change", true, false);
-        document.querySelector("#urlCombo").dispatchEvent(event);
+        _prevButtonCommand();
     };
+    Mousetrap.bind(["alt s","command s"], () => {
+        _forceBlur();
+        _prevButtonCommand();
+    });
+}
+
+function _prevButtonCommand() {
+    var crIdx = urlArrIdx;
+    crIdx--;
+    if(crIdx < 0) {
+        alert("これ以上戻れません");
+        return;
+    }
+    urlArrIdx = crIdx;
+    var combo = document.querySelector("#urlCombo");
+    combo.selectedIndex = crIdx;
+    event = document.createEvent("HTMLEvents");
+    event.initEvent("change", true, false);
+    document.querySelector("#urlCombo").dispatchEvent(event);
 }
 
 function ungoButton() {
@@ -368,6 +396,11 @@ function documentLinkButton() {
 
 function openButton() {
     document.getElementById("open").addEventListener("click", () => {
+        resetUrlCombo();
+        openFile();
+    });
+    Mousetrap.bind(["ctrl+o","command+o"], () => {
+        _forceBlur();
         resetUrlCombo();
         openFile();
     });
