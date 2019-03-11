@@ -19,38 +19,56 @@ let loginCallBack;
 
 const tmenu = Menu.buildFromTemplate([
     {
+        label: "Application",
+        submenu: [
+            {
+                label: "About Application",
+                selector: "orderFrontStandardAboutPanel:"
+            },
+            {
+                type: "separator"
+            },
+            {
+                label: "Quit",
+                accelerator: "Command+Q",
+                click: () => { app.quit(); }
+            }
+        ]
+    },
+    {
         label: "Edit",
         submenu: [
-            {role: "undo"},
-            {role: "redo"},
-            {role: "separator"},
-            {role: "cut"},
-            {role: "copy"},
-            {role: "paste"},
-            {role: "pasteandmatchstyle"},
-            {role: "delete"},
-            {role: "selectall"}
-        ]
-    },
-    {
-        label: "View",
-        submenu: [
-            {role: "reload"},
-            {role: "forceload"},
-            {role: "toggledevtools"},
-            {type: "separator"},
-            {role: "resetzoom"},
-            {role: "zoomin"},
-            {role: "zoomout"},
-            {type: "separator"},
-            {role: "togglefullscreen"}
-        ]
-    },
-    {
-        role: "window",
-        submenu: [
-            {role: "minimize"},
-            {role: "close"}
+            {
+                label: "Undo",
+                accelerator: "CmdOrCtrl+Z",
+                selector: "undo:"
+            },
+            {
+                label: "Redo",
+                accelerator: "Shift+CmdOrCtrl+Z",
+                selector: "redo:"
+            },
+            { type: "separator" },
+            {
+                label: "Cut",
+                accelerator: "CmdOrCtrl+X",
+                selector: "cut:"
+            },
+            {
+                label: "Copy",
+                accelerator: "CmdOrCtrl+C",
+                selector: "copy:"
+            },
+            {
+                label: "Paste",
+                accelerator: "CmdOrCtrl+V",
+                selector: "paste:"
+            },
+            {
+                label: "Select All",
+                accelerator: "CmdOrCtrl+A",
+                selector: "selectAll:"
+            }
         ]
     }
 ]);
@@ -224,8 +242,11 @@ function createWindow() {
     mainWindow = new BrowserWindow({ width: 1140, height: 740});
     mainWindow.loadURL("file://" + __dirname + "/index.html");
     //mainWindow.toggleDevTools();
-    //Menu.setApplicationMenu(tmenu);
-    Menu.setApplicationMenu(null);
+    if(process.platform === "darwin") {
+        Menu.setApplicationMenu(tmenu);
+    } else {
+        Menu.setApplicationMenu(null);
+    }
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
