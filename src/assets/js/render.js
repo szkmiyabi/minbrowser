@@ -70,18 +70,6 @@ function initWebview() {
             }
         },
         {
-            label: "既定のブラウザで開く",
-            click: () => {
-                var crWindow = BrowserWindow.getFocusedWindow();
-                var crurl = webview.src;
-                crWindow.webContents.executeJavaScript(`
-                    require("electron").ipcRenderer.send("view-new-window-click",
-                        JSON.parse(JSON.stringify({winurl: "${crurl}"}))
-                    );
-                `);
-            }
-        },
-        {
             label: "動作検証ウィンドウを開く",
             click: () => {
                 var crWindow = BrowserWindow.getFocusedWindow();
@@ -94,10 +82,52 @@ function initWebview() {
             }
         },
         {
+            type: "separator"
+        },
+        {
+            label: "既定のブラウザで開く",
+            click: () => {
+                var crWindow = BrowserWindow.getFocusedWindow();
+                var crurl = webview.src;
+                crWindow.webContents.executeJavaScript(`
+                    require("electron").ipcRenderer.send("view-new-window-click",
+                        JSON.parse(JSON.stringify({winurl: "${crurl}"}))
+                    );
+                `);
+            }
+        },
+        {
             label: "再読み込み",
             click: () => {
                 webview.reload();
             }
+        },
+        {
+            type: "separator"
+        },
+        {
+            label: "切り取り",
+            role: "cut",
+            accelerator: "CmdOrCtrl+X"
+            
+        },
+        {
+            label: "コピー",
+            role: "copy",
+            accelerator: "CmdOrCtrl+C"
+        },
+        {
+            label: "貼り付け",
+            role: "paste",
+            accelerator: "CmdOrCtrl+V"
+        },
+        {
+            label: "全て選択",
+            role: "selectall",
+            accelerator: "CmdOrCtrl+A"
+        },
+        {
+            type: "separator"
         },
         {
             label: "ズーム",

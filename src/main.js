@@ -107,6 +107,33 @@ const rmenu = Menu.buildFromTemplate([
         }
     },
     {
+        type: "separator"
+    },
+    {
+        label: "切り取り",
+        role: "cut",
+        accelerator: "CmdOrCtrl+X"
+        
+    },
+    {
+        label: "コピー",
+        role: "copy",
+        accelerator: "CmdOrCtrl+C"
+    },
+    {
+        label: "貼り付け",
+        role: "paste",
+        accelerator: "CmdOrCtrl+V"
+    },
+    {
+        label: "全て選択",
+        role: "selectall",
+        accelerator: "CmdOrCtrl+A"
+    },
+    {
+        type: "separator"
+    },
+    {
         label: "フォーム調査",
         submenu: [
             {
