@@ -17,6 +17,9 @@ let frmWindow = null;
 let authWindow;
 let loginCallBack;
 
+let winPos = null;
+const winPosMargin = 20;
+
 const tmenu = Menu.buildFromTemplate([
     {
         label: "Application",
@@ -268,6 +271,7 @@ const rmenu = Menu.buildFromTemplate([
 function createWindow() {
     mainWindow = new BrowserWindow({ width: 1140, height: 740});
     mainWindow.loadURL("file://" + __dirname + "/index.html");
+    winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
     //mainWindow.toggleDevTools();
     if(process.platform === "darwin") {
         Menu.setApplicationMenu(tmenu);
@@ -277,6 +281,16 @@ function createWindow() {
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
+    mainWindow.on("move", () => {
+        winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
+    });
+}
+
+function fetchWindowPos() {
+    let pos = JSON.parse(winPos);
+    let x = pos[0];
+    let y = pos[1];
+    return [x + winPosMargin, y + winPosMargin]; 
 }
 
 app.on("ready", () => {
@@ -509,6 +523,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
         } else {
             let nowurl = presvWindow.webContents.getURL();
