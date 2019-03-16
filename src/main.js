@@ -300,6 +300,7 @@ app.on("ready", () => {
             w3cWindow = new BrowserWindow({width: 1024, height:768});
             w3cWindow.on("closed", () => {w3cWindow = null});
             w3cWindow.loadURL(arg.winurl);
+            w3cWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //w3cWindow.webContents.toggleDevTools();
             w3cWindow.webContents.on("dom-ready", () => {
                 w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
@@ -331,6 +332,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
             });
@@ -351,6 +353,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
@@ -372,6 +375,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
@@ -393,6 +397,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
@@ -414,6 +419,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
@@ -435,6 +441,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
@@ -456,6 +463,7 @@ app.on("ready", () => {
             presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
             presvWindow.webContents.on("dom-ready", () => {
                 presvWindow.webContents.executeJavaScript(presvUtil.document_link());
@@ -477,6 +485,7 @@ app.on("ready", () => {
         let srcWindow = new BrowserWindow({width: 1024, height: 768});
         srcWindow.on("closed", () => {srcWindow = null});
         srcWindow.loadURL("view-source:" + arg.winurl);
+        srcWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
     });
     ipcMain.on("view-new-window-click", (event, arg) => {
         shell.openExternal(arg.winurl);
@@ -485,6 +494,7 @@ app.on("ready", () => {
         let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
         pdfSaveWindow.on("closed", () => {pdfSaveWindow = null});
         pdfSaveWindow.loadURL(arg.winurl);
+        pdfSaveWindow.setPosition(JSON.parse(winPos)[0], JSON.parse(winPos)[1]);
         pdfSaveWindow.webContents.on("dom-ready", () => {
             require("electron").dialog.showSaveDialog(
                 pdfSaveWindow,
@@ -545,6 +555,7 @@ app.on("ready", () => {
             alwaysOnTop: true,
             frame: false
         });
+        //promptWindow.setPosition(JSON.parse(winPos)[0], JSON.parse(winPos)[1]);
         arg.val = arg.val || '';
         const promptHtml = '<html lang="ja"><head><meta charset="utf-8">\
         <style>body {font-family: sans-serif;} button {float:right; margin-left: 10px;} label,input {margin-bottom: 10px; width: 100%; display:block;}\
@@ -580,6 +591,7 @@ app.on("login", (event, webContents, request, authInfo, callback) => {
         modal: true,
         frame: false
     });
+    //authWindow.setPosition(JSON.parse(winPos)[0], JSON.parse(winPos)[1]);
     const authHtml = '<html lang="ja"><head><meta charset="utf-8">\
     <style>body{text-align:center;}input{margin:5px}button{margin-top:10px;border-radius:5px;}</style>\
     </head><body><h3>ログイン</h3>\
