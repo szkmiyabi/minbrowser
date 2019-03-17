@@ -282,7 +282,10 @@ function createWindow() {
         mainWindow = null;
     });
     mainWindow.on("move", () => {
-        winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
+        try {
+            let winPosTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
+            if(winPosTmp !== null) winPos = winPosTmp;
+        } catch(e) {}
     });
 }
 
