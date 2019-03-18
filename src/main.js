@@ -6,6 +6,7 @@ const { Menu } = require("electron");
 const { ipcMain } = require("electron");
 const { clipboard } = require("electron");
 const { shell } = require("electron");
+const path = require("path");
 
 const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
@@ -19,6 +20,9 @@ let loginCallBack;
 
 let winPos = null;
 const winPosMargin = 20;
+let winDataPath = path.join(app.getPath("userData"), "win-bounds.json");
+let winSize = null;
+let childWinSize = null;
 
 const tmenu = Menu.buildFromTemplate([
     {
@@ -269,7 +273,12 @@ const rmenu = Menu.buildFromTemplate([
 ]);
 
 function createWindow() {
-    mainWindow = new BrowserWindow({ width: 1140, height: 740});
+    fetchWindowSize();
+    let sz = JSON.parse(winSize);
+    mainWindow = new BrowserWindow({ width: sz["width"], height: sz["height"]});
+    try {
+        mainWindow.setPosition(sz["x"], sz["y"]);
+    } catch(e) {}
     mainWindow.loadURL("file://" + __dirname + "/index.html");
     winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
     //mainWindow.toggleDevTools();
@@ -278,6 +287,13 @@ function createWindow() {
     } else {
         Menu.setApplicationMenu(null);
     }
+    mainWindow.on("close", () => {
+        try {
+            let winSizeTmp = BrowserWindow.getFocusedWindow().getBounds();
+            if(winSizeTmp !== null) winSize = winSizeTmp;
+            fs.writeFileSync(winDataPath, JSON.stringify(winSize));
+        } catch(e) {}
+    });
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
@@ -294,6 +310,21 @@ function fetchWindowPos() {
     let x = pos[0];
     let y = pos[1];
     return [x + winPosMargin, y + winPosMargin]; 
+}
+
+function fetchWindowSize() {
+    try {
+        winSize = fs.readFileSync(winDataPath, "utf8");
+    } catch(e) {
+        winSize = JSON.stringify({width: 1140, height: 740});
+    }
+}
+
+function fetchChildWindowSize() {
+    if(childWinSize === null) {
+        let psz = JSON.parse(winSize);
+        childWinSize = JSON.stringify({width: psz["width"], height: psz["height"]});
+    }
 }
 
 app.on("ready", () => {
@@ -533,8 +564,14 @@ app.on("ready", () => {
     });
     ipcMain.on("operation-new-window-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
