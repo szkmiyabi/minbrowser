@@ -276,9 +276,7 @@ function createWindow() {
     fetchWindowSize();
     let sz = JSON.parse(winSize);
     mainWindow = new BrowserWindow({ width: sz["width"], height: sz["height"]});
-    try {
-        mainWindow.setPosition(sz["x"], sz["y"]);
-    } catch(e) {}
+    try { mainWindow.setPosition(sz["x"], sz["y"]); } catch(e) {}
     mainWindow.loadURL("file://" + __dirname + "/index.html");
     winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
     //mainWindow.toggleDevTools();
@@ -331,8 +329,14 @@ app.on("ready", () => {
     createWindow();
     ipcMain.on('w3cButton-click', (event, arg) => {
         if(w3cWindow === null) {
-            w3cWindow = new BrowserWindow({width: 1024, height:768});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            w3cWindow = new BrowserWindow({width: sz["width"], height: sz["height"]});
             w3cWindow.on("closed", () => {w3cWindow = null});
+            w3cWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             w3cWindow.loadURL(arg.winurl);
             w3cWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //w3cWindow.webContents.toggleDevTools();
@@ -363,8 +367,14 @@ app.on("ready", () => {
     });
     ipcMain.on("ccButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             presvWindow.webContents.on("dom-ready", () => {
@@ -384,8 +394,14 @@ app.on("ready", () => {
     });
     ipcMain.on("altButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null });
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -406,8 +422,14 @@ app.on("ready", () => {
     });
     ipcMain.on("targetButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -428,8 +450,14 @@ app.on("ready", () => {
     });
     ipcMain.on("structButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -450,8 +478,14 @@ app.on("ready", () => {
     });
     ipcMain.on("langButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -472,8 +506,14 @@ app.on("ready", () => {
     });
     ipcMain.on("labelAndTitleButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -494,8 +534,14 @@ app.on("ready", () => {
     });
     ipcMain.on("documentLinkButton-click", (event, arg) => {
         if(presvWindow === null) {
-            presvWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
             presvWindow.loadURL(arg.winurl);
             presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
             //presvWindow.webContents.toggleDevTools();
@@ -516,8 +562,14 @@ app.on("ready", () => {
     });
 
     ipcMain.on("view-source-click", (event, arg) => {
-        let srcWindow = new BrowserWindow({width: 1024, height: 768});
+        fetchChildWindowSize();
+        let sz = JSON.parse(childWinSize);
+        let srcWindow = new BrowserWindow({width: sz["width"], height: sz["height"]});
         srcWindow.on("closed", () => {srcWindow = null});
+        srcWindow.on("resize", () => {
+            let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+            if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+        });
         srcWindow.loadURL("view-source:" + arg.winurl);
         srcWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
     });
@@ -525,10 +577,16 @@ app.on("ready", () => {
         shell.openExternal(arg.winurl);
     });
     ipcMain.on("save-pdf-click", (event, arg) => {
-        let pdfSaveWindow = new BrowserWindow({width: 1024, height: 768, webPreferences: { nodeIntegration: false }});
+        fetchChildWindowSize();
+        let sz = JSON.parse(childWinSize);
+        let pdfSaveWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
         pdfSaveWindow.on("closed", () => {pdfSaveWindow = null});
+        pdfSaveWindow.on("resize", () => {
+            let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+            if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+        });
         pdfSaveWindow.loadURL(arg.winurl);
-        pdfSaveWindow.setPosition(JSON.parse(winPos)[0], JSON.parse(winPos)[1]);
+        pdfSaveWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
         pdfSaveWindow.webContents.on("dom-ready", () => {
             require("electron").dialog.showSaveDialog(
                 pdfSaveWindow,
