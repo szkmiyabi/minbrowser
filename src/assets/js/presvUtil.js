@@ -241,7 +241,7 @@ module.exports = class presvUtil {
                 for(var i=0; i<brs.length; i++) {
                     var br = brs.item(i);
                     var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
-                    var span = '<span id="bkm-br-span-"' + i + '" style="' + css_txt + 'background:#888888;">&lt;br&gt;</span>';
+                    var span = '<span id="bkm-br-span-' + i + '" style="' + css_txt + 'background:#888888;">&lt;br&gt;</span>';
                     br.insertAdjacentHTML("beforebegin", span);
                 }
             }
@@ -336,6 +336,16 @@ module.exports = class presvUtil {
                     in_funcs[i]();
                 }
             }
+            function tag_empty_a() {
+                var empas = document.querySelectorAll("a:empty, a span:empty");
+                var i = 0;
+                for(itm of empas) {
+                    var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
+                    var span = '<span id="bkm-empry-a-span-' + i + '" style="' + css_txt + 'background:#C000C0;">空リンク有</span>';
+                    itm.insertAdjacentHTML("beforebegin", span);
+                    i++;
+                }
+            }
             function add_label(obj, cnt, pos, colorcode) {
                 var tag_name = obj.tagName;
                     tag_name = tag_name.toLowerCase();
@@ -352,6 +362,7 @@ module.exports = class presvUtil {
             tag_semantic();
             tag_list();
             tag_table();
+            tag_empty_a();
         `;
     }
 
