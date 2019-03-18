@@ -212,6 +212,14 @@ const rmenu = Menu.buildFromTemplate([
                 click: () => {
                     BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_bigtext());
                 } 
+            },
+            {
+                label: "フォーム送信テストお詫び文注入",
+                click: () => {
+                    BrowserWindow.getFocusedWindow().webContents.executeJavaScript(presvUtil.form_insert_testdata(
+                        "これはフォームの動作確認のため送信しました。ご了承ください。"
+                    ));
+                }
             }
         ]
     },
