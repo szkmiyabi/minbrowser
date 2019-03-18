@@ -278,7 +278,11 @@ function createWindow() {
     mainWindow = new BrowserWindow({ width: sz["width"], height: sz["height"]});
     try { mainWindow.setPosition(sz["x"], sz["y"]); } catch(e) {}
     mainWindow.loadURL("file://" + __dirname + "/index.html");
-    winPos = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
+    try {
+        winPos = BrowserWindow.getFocusedWindow().getPosition();
+    } catch(e) {
+        winPos = [20, 20];
+    }
     //mainWindow.toggleDevTools();
     if(process.platform === "darwin") {
         Menu.setApplicationMenu(tmenu);
@@ -297,16 +301,15 @@ function createWindow() {
     });
     mainWindow.on("move", () => {
         try {
-            let winPosTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getPosition());
+            let winPosTmp = BrowserWindow.getFocusedWindow().getPosition();
             if(winPosTmp !== null) winPos = winPosTmp;
         } catch(e) {}
     });
 }
 
 function fetchWindowPos() {
-    let pos = JSON.parse(winPos);
-    let x = pos[0];
-    let y = pos[1];
+    let x = winPos[0];
+    let y = winPos[1];
     return [x + winPosMargin, y + winPosMargin]; 
 }
 
