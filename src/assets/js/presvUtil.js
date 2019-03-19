@@ -340,10 +340,13 @@ module.exports = class presvUtil {
                 var empas = document.querySelectorAll("a:empty, a span:empty");
                 var i = 0;
                 for(itm of empas) {
-                    var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
-                    var span = '<span id="bkm-empry-a-span-' + i + '" style="' + css_txt + 'background:#C000C0;">空リンク有</span>';
-                    itm.insertAdjacentHTML("beforebegin", span);
-                    i++;
+                    var href_flg = null;
+                    if(!itm.hasAttribute("name")) {
+                        var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
+                        var span = '<span id="bkm-empry-a-span-' + i + '" style="' + css_txt + 'background:#C000C0;">空リンク有</span>';
+                        itm.insertAdjacentHTML("beforebegin", span);
+                        i++;
+                    }
                 }
             }
             function add_label(obj, cnt, pos, colorcode) {
