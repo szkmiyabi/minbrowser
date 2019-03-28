@@ -191,7 +191,7 @@ function initWebview() {
             ]
         },
         {
-            label: "このページをPDFで保存する",
+            label: "このページをPDFに保存する",
             click: () => {
                 let webview = document.querySelector("webview");
                 let crurl = webview.src;
@@ -421,6 +421,18 @@ function documentLinkButton() {
         require("electron").ipcRenderer.send("documentLinkButton-click", {
             winurl: crurl
         });
+    };
+}
+
+function operationNewWindowButton() {
+    document.querySelector("#operation-new-window").onclick = function() {
+        var crWindow = BrowserWindow.getFocusedWindow();
+        var crurl = webview.src;
+        crWindow.webContents.executeJavaScript(`
+            require("electron").ipcRenderer.send("operation-new-window-click",
+                JSON.parse(JSON.stringify({winurl: "${crurl}"}))
+            );
+        `);
     };
 }
 

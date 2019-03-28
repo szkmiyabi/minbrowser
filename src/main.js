@@ -243,7 +243,10 @@ const rmenu = Menu.buildFromTemplate([
         ]
     },
     {
-        label: "このページをPDFで保存する",
+        type: "separator"
+    },
+    {
+        label: "このページをPDFに保存する",
         click: () => {
             let crWindow = BrowserWindow.getFocusedWindow();
             require("electron").dialog.showSaveDialog(
@@ -264,6 +267,37 @@ const rmenu = Menu.buildFromTemplate([
                         }, (error, data) => {
                             fs.writeFile(fileName, data, (error) => {
                                 let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページをPDFに保存しました!"};
+                                let fail_msg_opt = {type:"warning", buttons:["OK"], message:"", detail:"保存に失敗しました!"};
+                                if(error) {
+                                    require("electron").dialog.showMessageBox(crWindow, fail_msg_opt);
+                                } else {
+                                    require("electron").dialog.showMessageBox(crWindow, ok_msg_opt);
+                                }
+                            })
+                        })
+                    }
+                }
+            )
+        }
+    },
+    {
+        label: "このページを画像に保存する",
+        click: () => {
+            let crWindow = BrowserWindow.getFocusedWindow();
+            require("electron").dialog.showSaveDialog(
+                crWindow,
+                {
+                    properties: ["openFile"],
+                    filters: [{
+                        name: "PNG Image",
+                        extensions: ["png"]
+                    }]
+                },
+                (fileName) => {
+                    if(fileName) {
+                        crWindow.webContents.capturePage((image) => {
+                            fs.writeFile(fileName, image.toPNG(), (error) => {
+                                let ok_msg_opt = {type:"none", buttons:["OK"], message:"", detail:"表示中のページを画像に保存しました!"};
                                 let fail_msg_opt = {type:"warning", buttons:["OK"], message:"", detail:"保存に失敗しました!"};
                                 if(error) {
                                     require("electron").dialog.showMessageBox(crWindow, fail_msg_opt);
@@ -635,7 +669,7 @@ app.on("ready", () => {
         if(presvWindow === null) {
             fetchChildWindowSize();
             let sz = JSON.parse(childWinSize);
-            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], backgroundColor: "#fff", webPreferences: { nodeIntegration: false }});
             presvWindow.on("closed", () => { presvWindow = null});
             presvWindow.on("resize", () => {
                 let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
