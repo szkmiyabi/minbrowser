@@ -12,14 +12,14 @@ const presvUtil = require(__dirname + "/assets/js/presvUtil");
 let mainWindow;
 let w3cWindow = null;
 let presvWindow = null;
-let brWindow = null;
-let frmWindow = null;
+let srcWindow = null;
 
 let authWindow;
 let loginCallBack;
 
 let winPos = null;
-const winPosMargin = 20;
+const winPosXMargin = 30;
+const winPosYMargin = 65;
 let winDataPath = path.join(app.getPath("userData"), "win-bounds.json");
 let winSize = null;
 let childWinSize = null;
@@ -352,7 +352,7 @@ function createWindow() {
 function fetchWindowPos() {
     let x = winPos[0];
     let y = winPos[1];
-    return [x + winPosMargin, y + winPosMargin]; 
+    return [x + winPosXMargin, y + winPosYMargin]; 
 }
 
 function fetchWindowSize() {
@@ -392,10 +392,12 @@ app.on("ready", () => {
             let nowurl = w3cWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 w3cWindow.loadURL(arg.winurl);
+                w3cWindow.focus();
                 w3cWindow.webContents.on("dom-ready", () => {
                     w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
                 });
             } else {
+                w3cWindow.focus();
                 w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
             }
         }
@@ -428,11 +430,13 @@ app.on("ready", () => {
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
+                presvWindow.focus();
                 presvWindow.loadURL(arg.winurl);
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
                 });
-            } else {            
+            } else {
+                presvWindow.focus();      
                 presvWindow.webContents.executeJavaScript(presvUtil.css_cut());
             }
         }
@@ -457,10 +461,12 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.image_alt());
             }
         }
@@ -485,10 +491,12 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.target_attr());
             }
         }
@@ -513,10 +521,12 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
             }
         }
@@ -541,10 +551,12 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.lang_attr());
             }
         }
@@ -569,10 +581,12 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.tag_label_and_title_attr());
             }
         }
@@ -597,26 +611,33 @@ app.on("ready", () => {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
                 presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
                 presvWindow.webContents.on("dom-ready", () => {
                     presvWindow.webContents.executeJavaScript(presvUtil.document_link());
                 });
             } else {
+                presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.document_link());
             }
         }
     });
 
     ipcMain.on("view-source-click", (event, arg) => {
-        fetchChildWindowSize();
-        let sz = JSON.parse(childWinSize);
-        let srcWindow = new BrowserWindow({width: sz["width"], height: sz["height"]});
-        srcWindow.on("closed", () => {srcWindow = null});
-        srcWindow.on("resize", () => {
-            let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
-            if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
-        });
-        srcWindow.loadURL("view-source:" + arg.winurl);
-        srcWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
+        if(srcWindow === null) {
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            srcWindow = new BrowserWindow({width: sz["width"], height: sz["height"]});
+            srcWindow.on("closed", () => {srcWindow = null});
+            srcWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
+            srcWindow.loadURL("view-source:" + arg.winurl);
+            srcWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
+        } else {
+            srcWindow.focus();
+            srcWindow.loadURL("view-source:" + arg.winurl);
+        }
     });
     ipcMain.on("view-new-window-click", (event, arg) => {
         shell.openExternal(arg.winurl);
@@ -681,7 +702,10 @@ app.on("ready", () => {
         } else {
             let nowurl = presvWindow.webContents.getURL();
             if(nowurl != arg.winurl) {
+                presvWindow.focus();
                 presvWindow.loadURL(arg.winurl);
+            } else {
+                presvWindow.focus();
             }
         }
     });
