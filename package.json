@@ -6,14 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron src",
-    "build-windows": "electron-packager src minbrowser --platform=win32 --arch=all --overwrite --electron-version=4.0.6 --icon=src/assets/icons/appicon.ico",
-    "build-macOS": "electron-packager src minbrowser --platform=darwin --arch=x64 --overwrite --electron-version=4.0.6 --icon=src/assets/icons/appicon.icns"
+    "build-windows": "electron-packager src minbrowser --platform=win32 --arch=all --overwrite --electron-version=4.2.9 --icon=src/assets/icons/appicon.ico",
+    "build-macOS": "electron-packager src minbrowser --platform=darwin --arch=x64 --overwrite --electron-version=4.2.9 --icon=src/assets/icons/appicon.icns"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^4.0.6",
-    "electron-packager": "^13.1.0"
+    "electron": "^4.2.9",
+    "electron-packager": "^14.0.4"
   }
 }
