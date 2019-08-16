@@ -18,7 +18,7 @@ let authWindow;
 let loginCallBack;
 
 let winPos = null;
-const winPosXMargin = 30;
+const winPosXMargin = 60;
 const winPosYMargin = 65;
 let winDataPath = path.join(app.getPath("userData"), "win-bounds.json");
 let winSize = null;
