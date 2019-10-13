@@ -467,7 +467,7 @@ module.exports = class presvUtil {
                     } else {
                         typeattr = ip.getAttribute("type");
                     }
-                    if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox") {
+                    if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox" || typeattr === "password") {
                         var span_html = "";
                         var span_style = "";
                         var span_id = "bkm-input-span-" + i;
@@ -564,7 +564,7 @@ module.exports = class presvUtil {
                                 } else {
                                     typeattr = t.getAttribute("type");
                                 }
-                                if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox") {
+                                if(typeattr === "text" || typeattr === "radio" || typeattr === "checkbox" || typeattr === "password") {
                                     var span_html = "";
                                     var span_style = "";
                                     var span_id = "bkm-title-attr-span-" + i;
