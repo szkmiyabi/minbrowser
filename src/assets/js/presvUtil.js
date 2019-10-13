@@ -650,6 +650,7 @@ module.exports = class presvUtil {
                         var cr_ext = get_document_type(regx_arr, href_vl);
                         var span_id = "bkm-isdocument-span-" + i;
                         var span_html = "Fileリンク: " + cr_ext;
+                        span_html += ", filename: " + get_filename(cr_ext, href_vl);
                         var span_css = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C000C0;border-radius:5px;";
                         var span = '<span id="' + span_id + '" style="' + span_css + '">' + span_html + '</span>';
                         atag.insertAdjacentHTML("beforebegin", span);
@@ -661,6 +662,15 @@ module.exports = class presvUtil {
                         atag.insertAdjacentHTML("beforebegin", span);
                     }
                 }
+            }
+            function get_filename(ext, str) {
+                var ret = "";
+                var pt = new RegExp("(^\/.+\/|^\.+.+\/|.+\/|.*)(\/*)(.+)(\.)(" + ext + "|" + ext.toLowerCase() + ")$");
+                if(pt.test(str)) {
+                    var arr = str.match(pt);
+                    ret = arr[3] + arr[4] + arr[5];
+                }
+                return ret;
             }
             function is_premium_pdf_link(str) {
                 str = str.toLowerCase();
