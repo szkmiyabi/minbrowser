@@ -11,7 +11,6 @@ window.onload = function() {
     ungoButton();
     regoButton();
     enterUrlText();
-    w3cButton();
     cssCutButton();
     altCheckButton();
     targetCheckButton();
@@ -22,6 +21,7 @@ window.onload = function() {
     langButton();
     labelAndTitleButton();
     documentLinkButton();
+    ariaCheckButton();
 };
 
 window.prompt = function(title, val){

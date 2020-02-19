@@ -340,15 +340,6 @@ function refetchButton() {
     };
 }
 
-function w3cButton() {
-    document.querySelector("#w3c").onclick = function() {
-        let crurl = document.querySelector("#urlText").value;
-        require("electron").ipcRenderer.send("w3cButton-click", {
-            win: "w3cWin", winurl: w3c_urlbase + crurl
-        });
-    };
-}
-
 function cssCutButton() {
     document.querySelector("#csscut").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
@@ -380,6 +371,15 @@ function structCheckButton() {
     document.querySelector("#structcheck").onclick = function() {
         let crurl = document.querySelector("#urlText").value;
         require("electron").ipcRenderer.send("structButton-click", {
+            winurl: crurl
+        });
+    };
+}
+
+function ariaCheckButton() {
+    document.querySelector("#ariacheck").onclick = function() {
+        let crurl = document.querySelector("#urlText").value;
+        require("electron").ipcRenderer.send("ariaButton-click", {
             winurl: crurl
         });
     };

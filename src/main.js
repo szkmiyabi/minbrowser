@@ -372,36 +372,7 @@ function fetchChildWindowSize() {
 
 app.on("ready", () => {
     createWindow();
-    ipcMain.on('w3cButton-click', (event, arg) => {
-        if(w3cWindow === null) {
-            fetchChildWindowSize();
-            let sz = JSON.parse(childWinSize);
-            w3cWindow = new BrowserWindow({width: sz["width"], height: sz["height"]});
-            w3cWindow.on("closed", () => {w3cWindow = null});
-            w3cWindow.on("resize", () => {
-                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
-                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
-            });
-            w3cWindow.loadURL(arg.winurl);
-            w3cWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
-            //w3cWindow.webContents.toggleDevTools();
-            w3cWindow.webContents.on("dom-ready", () => {
-                w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
-            });
-        } else {
-            let nowurl = w3cWindow.webContents.getURL();
-            if(nowurl != arg.winurl) {
-                w3cWindow.loadURL(arg.winurl);
-                w3cWindow.focus();
-                w3cWindow.webContents.on("dom-ready", () => {
-                    w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
-                });
-            } else {
-                w3cWindow.focus();
-                w3cWindow.webContents.executeJavaScript(presvUtil.w3c_report());
-            }
-        }
-    });
+
     ipcMain.on("reply", (event, arg) => {
         let argval = arg.reptext;
         argval = argval.replace(/<my:br>/g, "\r\n");
@@ -568,6 +539,46 @@ app.on("ready", () => {
             } else {
                 presvWindow.focus();
                 presvWindow.webContents.executeJavaScript(presvUtil.semantic_check());
+            }
+        }
+    });
+    ipcMain.on("ariaButton-click", (event, arg) => {
+        if(presvWindow === null) {
+            fetchChildWindowSize();
+            let sz = JSON.parse(childWinSize);
+            presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
+            presvWindow.on("closed", () => { presvWindow = null});
+            presvWindow.on("resize", () => {
+                let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+            });
+            presvWindow.loadURL(arg.winurl);
+            presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
+            //presvWindow.webContents.toggleDevTools();
+            presvWindow.webContents.on("dom-ready", () => {
+                presvWindow.webContents.executeJavaScript(presvUtil.aria_check());
+            });
+        } else {
+            let nowurl = presvWindow.webContents.getURL();
+            if(nowurl != arg.winurl) {
+                presvWindow.destroy();
+                fetchChildWindowSize();
+                let sz = JSON.parse(childWinSize);
+                presvWindow = new BrowserWindow({width: sz["width"], height: sz["height"], webPreferences: { nodeIntegration: false }});
+                presvWindow.on("closed", () => { presvWindow = null });
+                presvWindow.on("resize", () => {
+                    let childWinSizeTmp = JSON.stringify(BrowserWindow.getFocusedWindow().getBounds());
+                    if(childWinSizeTmp !== null) childWinSize = childWinSizeTmp;
+                });
+                presvWindow.loadURL(arg.winurl);
+                presvWindow.focus();
+                presvWindow.webContents.on("dom-ready", () => {
+                    presvWindow.webContents.executeJavaScript(presvUtil.aria_check());
+                });
+                presvWindow.setPosition(fetchWindowPos()[0], fetchWindowPos()[1]);
+            } else {
+                presvWindow.focus();
+                presvWindow.webContents.executeJavaScript(presvUtil.aria_check());
             }
         }
     });

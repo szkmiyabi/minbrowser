@@ -349,7 +349,7 @@ module.exports = class presvUtil {
             function tag_empty_a() {
                 var empas = document.querySelectorAll("a:empty, a span:empty");
                 var i = 0;
-                for(itm of empas) {
+                for(var itm of empas) {
                     var href_flg = null;
                     if(!itm.hasAttribute("name")) {
                         var css_txt = "color:#fff;font-size:90%!important;padding:1px;border-radius:3px;";
@@ -544,7 +544,7 @@ module.exports = class presvUtil {
                 }
             }
             function tag_title_attr() {
-                var tags = ["a", "input", "textarea", "select"];
+                var tags = ["a", "input", "textarea", "select", "iframe"];
                 var idx = tags.length;
                 var in_funcs = new Array();
                 for(var i=0; i<idx; i++) {
@@ -602,6 +602,21 @@ module.exports = class presvUtil {
                                     span_html = (title_vl === "") ? "title属性有:(空)" : "title属性有: " + title_vl;
                                 } else if(type === "title-no") {
                                     span_html = "title属性なし";
+                                }
+                                var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
+                                t.insertAdjacentHTML("beforebegin", span);
+                            } else if(tag_name === "iframe") {
+                                var span_html = "";
+                                var span_style = "";
+                                span_html = tag_name + "要素, ";
+                                var span_id = "bkm-title-attr-span-" + i;
+                                if(t.hasAttribute("title")) {
+                                    var title_vl = t.getAttribute("title");
+                                    span_html += (title_vl === "") ? "title属性有:(空)" : "title属性有: " + title_vl;
+                                    span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#008000;border-radius:5px;";
+                                } else {
+                                    span_html += "title属性なし";
+                                    span_style = "padding-right:5px;color:#fff;font-size:12px;padding:1px;background:#C00000;border-radius:5px;";
                                 }
                                 var span  = '<span id="' + span_id + '" style="' + span_style + '">' + span_html + '</span>';
                                 t.insertAdjacentHTML("beforebegin", span);
@@ -701,6 +716,78 @@ module.exports = class presvUtil {
                 ret = ret.toUpperCase();
                 return ret;
             }
+        `;
+    }
+
+    static aria_check() {
+        return `
+            function tag_with_role_attr() {
+                var elm = document.getElementsByTagName("*");
+                for(var i=0; i<elm.length; i++) {
+                    var el = elm.item(i);
+                    if(el.hasAttribute("role")) {
+                        var attr_text = el.getAttribute("role");
+                        el.setAttribute("style", "border:2px dotted #008080!important; position: relative;");
+                        add_label(el, i, "#279A9A", 'role: ' + attr_text);
+                    }
+                }
+            }
+            function tag_with_aria_attr() {
+                var elm = document.getElementsByTagName("*");
+                var pt = new RegExp(/aria-.*/mg);
+                for(var i=0; i<elm.length; i++) {
+                    var el = elm.item(i);
+                    var ret = "";
+                    var flg = false;
+                    var atts = el.attributes;
+                    for(var j=0; j<atts.length; j++) {
+                        var att = atts[j];
+                        if(pt.test(att.name)) {
+                            flg = true;
+                            ret += att.name + ": " + att.value + ", ";
+                        }
+                    }
+                    if(flg == true) {
+                        add_label(el, i, "#945E0E", ret);
+                    }
+                }
+            }
+            function tag_with_tabindex_attr() {
+                var elm = document.getElementsByTagName("*");
+                var pt = new RegExp(/tabindex/mg);
+                for(var i=0; i<elm.length; i++) {
+                    var el = elm.item(i);
+                    var ret = "";
+                    var flg = false;
+                    var atts = el.attributes;
+                    for(var j=0; j<atts.length; j++) {
+                        var att = atts[j];
+                        if(pt.test(att.name)) {
+                            flg = true;
+                            ret += att.name + ": " + att.value + ", ";
+                        }
+                    }
+                    if(flg == true) {
+                        add_label(el, i, "#C00000", ret);
+                    }
+                }
+            }
+            function add_label(obj, cnt, colorcode, add_text) {
+                var tag_name = obj.tagName;
+                tag_name = tag_name.toLowerCase();
+                var span_id = "bkm-" + tag_name + "-span-" + cnt;
+                var css_txt = "color:#fff;font-size:90%!important;font-weight:normal!important;padding:1px;border-radius:3px;";
+                css_txt += 'background:' + colorcode + ';';
+                var html_str = tag_name + '要素, ' + add_text;
+                var span = '<span id="' + span_id + '" style="' + css_txt + '">' + html_str + '</span>';
+                var addelm = document.createElement("span");
+                addelm.style.cssText = css_txt;
+                addelm.innerHTML = span;
+                obj.prepend(addelm);
+            }
+            tag_with_role_attr();
+            tag_with_aria_attr();
+            tag_with_tabindex_attr();
         `;
     }
 
